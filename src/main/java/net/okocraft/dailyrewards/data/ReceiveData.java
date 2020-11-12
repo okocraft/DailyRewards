@@ -99,6 +99,10 @@ public class ReceiveData implements Closeable {
     public void reload() throws IOException {
         reset();
 
+        if (!Files.exists(filePath)) {
+            return;
+        }
+
         JsonObject json;
 
         try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
