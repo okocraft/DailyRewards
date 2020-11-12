@@ -19,7 +19,7 @@ permissions:
       - dailyrewards.command.receive
       - dailyrewards.command.reload
       - dailyrewards.command.reset
-      - dailtrewards.command.set
+      - dailyrewards.command.set
   dailyrewards.autoreceive:
     default: true
   dailyrewards.command:
@@ -32,5 +32,5 @@ permissions:
     default: op
   dailyrewards.command.reset:
     default: op
-  dailtrewards.command.set:
+  dailyrewards.command.set:
     default: op
