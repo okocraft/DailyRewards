@@ -1,0 +1,16 @@
+auto-receive:
+  enable: true
+  delay: 3
+
+disabled-worlds: []
+
+sound:
+  enable: true
+  receive:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 100
+    pitch: 1.0
+  cannot-receive:
+    sound: BLOCK_ANVIL_PLACE
+    volume: 100
+    pitch: 1.0

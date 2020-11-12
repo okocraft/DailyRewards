@@ -1,0 +1,5 @@
+default:
+  message: "&7* &6ログインボーナスを受け取りました。"
+  permission: "dailyrewards.reward.default"
+  commands:
+    - "minecraft:give %player% diamond 1"

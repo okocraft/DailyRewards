@@ -1,0 +1,36 @@
+name: DailyRewards
+api-version: "1.13"
+main: net.okocraft.dailyrewards.DailyRewards
+version: ${project.version}
+author: Siroshun09
+commands:
+  dailyrewards:
+    default: true
+    aliases: [dailyreward, reward, rw, dr]
+permissions:
+  dailyrewards.reward.default:
+    default: true
+  dailyrewards.*:
+    default: op
+    children:
+      - dailyrewards.autoreceive
+      - dailyrewards.command
+      - dailyrewards.command.give
+      - dailyrewards.command.receive
+      - dailyrewards.command.reload
+      - dailyrewards.command.reset
+      - dailtrewards.command.set
+  dailyrewards.autoreceive:
+    default: true
+  dailyrewards.command:
+    default: true
+  dailyrewards.command.receive:
+    default: true
+  dailyrewards.command.give:
+    default: op
+  dailyrewards.command.reload:
+    default: op
+  dailyrewards.command.reset:
+    default: op
+  dailtrewards.command.set:
+    default: op
