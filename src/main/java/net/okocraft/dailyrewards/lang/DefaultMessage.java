@@ -42,6 +42,8 @@ public enum DefaultMessage implements com.github.siroshun09.mcmessage.message.De
     ERROR_ALREADY_RECEIVED("reward.already-received", "&7* You have already received your login bonus for today."),
     ERROR_DISABLED_WORLD_1("reward.disabled-world-1", "&7* You are in the world that does not receive a login bonus."),
     ERROR_DISABLED_WORLD_2("reward.disabled-world-2", "&7* Go to another world and run &b/reward."),
+    ERROR_FAILED_TO_RUN_COMMAND_1("reward.failed-to-run-command-1", "Failed to execute the command."),
+    ERROR_FAILED_TO_RUN_COMMAND_2("reward.failed-to-run-command-2", "Please report this to the server administrator."),
 
     HELP_TOP("help.top-line", "&7* &6DailyRewards &eVersion %version%"),
     HELP_EMPTY("help.empty-line", "&7*"),
