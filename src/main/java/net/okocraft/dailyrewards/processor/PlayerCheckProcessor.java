@@ -1,6 +1,7 @@
 package net.okocraft.dailyrewards.processor;
 
 import net.okocraft.dailyrewards.DailyRewards;
+import net.okocraft.dailyrewards.config.Setting;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public class PlayerCheckProcessor {
             return Result.ALREADY_RECEIVED;
         }
 
-        if (plugin.getGeneralConfig().isDisabledWorld(target.getWorld().getName())) {
+        if (plugin.getGeneralConfig().get(Setting.DISABLED_WORLDS).contains(target.getWorld().getName())) {
             return Result.DISABLED_WORLD;
         }
 

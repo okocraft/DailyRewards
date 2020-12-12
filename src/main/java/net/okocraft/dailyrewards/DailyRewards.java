@@ -6,6 +6,7 @@ import com.github.siroshun09.mccommand.bukkit.paper.PaperChecker;
 import net.okocraft.dailyrewards.command.RewardCommand;
 import net.okocraft.dailyrewards.config.GeneralConfig;
 import net.okocraft.dailyrewards.config.RewardConfig;
+import net.okocraft.dailyrewards.config.Setting;
 import net.okocraft.dailyrewards.data.ReceiveData;
 import net.okocraft.dailyrewards.lang.LanguageManager;
 import net.okocraft.dailyrewards.lang.MessageBuilder;
@@ -66,7 +67,7 @@ public class DailyRewards extends JavaPlugin {
             return;
         }
 
-        if (generalConfig.isAutoReceiveEnabled()) {
+        if (generalConfig.get(Setting.ENABLE_AUTO_RECEIVE)) {
             playerJoinListener = new PlayerJoinListener(this);
             playerJoinListener.start();
         }
@@ -74,7 +75,7 @@ public class DailyRewards extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (generalConfig.isAutoReceiveEnabled()) {
+        if (generalConfig.get(Setting.ENABLE_AUTO_RECEIVE)) {
             playerJoinListener.shutdown();
         }
 

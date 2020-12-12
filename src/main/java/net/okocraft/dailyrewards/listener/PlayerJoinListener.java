@@ -1,6 +1,7 @@
 package net.okocraft.dailyrewards.listener;
 
 import net.okocraft.dailyrewards.DailyRewards;
+import net.okocraft.dailyrewards.config.Setting;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
@@ -35,7 +36,7 @@ public class PlayerJoinListener implements Listener {
                         plugin.getProcessors().getPlayerReceiveProcessor().tryReceive(event.getPlayer());
                     }
                 },
-                plugin.getGeneralConfig().getAutoReceiveDelay(),
+                plugin.getGeneralConfig().get(Setting.AUTO_RECEIVE_DELAY),
                 TimeUnit.SECONDS
         );
     }
