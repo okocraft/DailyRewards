@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ReceiveData implements Closeable {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final String FILE_NAME = "data.json";
+    private static final String FILE_NAME = "data.yml";
 
     private final DailyRewards plugin;
     private final Path filePath;
