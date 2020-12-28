@@ -120,7 +120,7 @@ public class ReceiveData implements Closeable {
                 receivedPlayers
                         .stream()
                         .map(UUID::toString)
-                        .collect(Collectors.toUnmodifiableSet())
+                        .collect(Collectors.toUnmodifiableList())
         );
 
         yaml.save();
