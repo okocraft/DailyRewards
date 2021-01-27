@@ -1,18 +1,11 @@
 package net.okocraft.dailyrewards.data;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.github.siroshun09.configapi.bukkit.BukkitYamlFactory;
 import net.okocraft.dailyrewards.DailyRewards;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -24,12 +17,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class ReceiveData implements Closeable {
 
-    private static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final String FILE_NAME = "data.json";
+    private static final String FILE_NAME = "data.yml";
 
     private final DailyRewards plugin;
     private final Path filePath;
@@ -103,21 +96,10 @@ public class ReceiveData implements Closeable {
             return;
         }
 
-        JsonObject json;
-
-        try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
-            json = GSON.fromJson(reader, JsonObject.class);
-        }
-
-        String path = DATE_TIME_FORMATTER.format(date);
-
-        if (json.has(path)) {
-            JsonElement element = json.get(path);
-
-            if (element.isJsonArray()) {
-                element.getAsJsonArray().iterator().forEachRemaining(el -> addUuidOrIgnore(el.getAsString()));
-            }
-        }
+        BukkitYamlFactory
+                .load(filePath)
+                .getStringList(DATE_TIME_FORMATTER.format(date))
+                .forEach(this::addUuidOrIgnore);
     }
 
     public void saveAsync() {
@@ -131,15 +113,17 @@ public class ReceiveData implements Closeable {
     }
 
     public void save() throws IOException {
-        JsonObject json = new JsonObject();
-        JsonArray array = new JsonArray();
+        var yaml = BukkitYamlFactory.getBukkitYaml(filePath);
 
-        receivedPlayers.stream().map(UUID::toString).forEach(array::add);
-        json.add(DATE_TIME_FORMATTER.format(date), array);
+        yaml.set(
+                DATE_TIME_FORMATTER.format(date),
+                receivedPlayers
+                        .stream()
+                        .map(UUID::toString)
+                        .collect(Collectors.toUnmodifiableList())
+        );
 
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8)) {
-            GSON.toJson(json, writer);
-        }
+        yaml.save();
     }
 
     private void addUuidOrIgnore(@NotNull String str) {
