@@ -1,5 +1,6 @@
 package net.okocraft.dailyrewards;
 
+import com.github.siroshun09.configapi.api.util.ResourceUtils;
 import com.github.siroshun09.mccommand.bukkit.BukkitCommandFactory;
 import net.okocraft.dailyrewards.command.RewardCommand;
 import net.okocraft.dailyrewards.config.GeneralConfig;
@@ -39,6 +40,10 @@ public class DailyRewards extends JavaPlugin {
         receiveData = new ReceiveData(this);
 
         try {
+            // save japanese message file before loading languages
+            var jpFilename = "ja_JP.properties";
+            var jpFilepath = getDataFolder().toPath().resolve("lang").resolve(jpFilename);
+            ResourceUtils.copyFromJarIfNotExists(getFile().toPath(), jpFilename, jpFilepath);
             languageManager.reload();
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -82,8 +87,6 @@ public class DailyRewards extends JavaPlugin {
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Could not close receive data.", e);
         }
-
-
     }
 
     public GeneralConfig getGeneralConfig() {
