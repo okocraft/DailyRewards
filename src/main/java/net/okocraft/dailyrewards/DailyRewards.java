@@ -1,8 +1,6 @@
 package net.okocraft.dailyrewards;
 
 import com.github.siroshun09.mccommand.bukkit.BukkitCommandFactory;
-import com.github.siroshun09.mccommand.bukkit.paper.AsyncTabCompleteListener;
-import com.github.siroshun09.mccommand.bukkit.paper.PaperChecker;
 import net.okocraft.dailyrewards.command.RewardCommand;
 import net.okocraft.dailyrewards.config.GeneralConfig;
 import net.okocraft.dailyrewards.config.RewardConfig;
@@ -57,9 +55,6 @@ public class DailyRewards extends JavaPlugin {
         if (command != null) {
             RewardCommand rewardCommand = new RewardCommand(this);
             BukkitCommandFactory.registerAsync(command, rewardCommand);
-            if (PaperChecker.check()) {
-                AsyncTabCompleteListener.register(this, rewardCommand);
-            }
         } else {
             getLogger().severe("Could not get /reward command, please report this to https://github.com/okocraft/DailyRewards/issues.");
             getServer().getPluginManager().disablePlugin(this);
