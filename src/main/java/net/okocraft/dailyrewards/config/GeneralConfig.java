@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.config;
 
-import com.github.siroshun09.configapi.bukkit.BukkitYaml;
-import com.github.siroshun09.configapi.bukkit.BukkitYamlFactory;
+import com.github.siroshun09.configapi.yaml.YamlConfiguration;
 import net.okocraft.dailyrewards.DailyRewards;
 import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
@@ -11,13 +10,13 @@ import java.nio.file.Path;
 
 public class GeneralConfig {
 
-    private final BukkitYaml yaml;
+    private final YamlConfiguration yaml;
 
     private Sound receiveSound;
     private Sound cannotReceiveSound;
 
     public GeneralConfig(@NotNull DailyRewards plugin) {
-        this.yaml = BukkitYamlFactory.loadUnsafe(plugin, "config.yml");
+        this.yaml = YamlConfiguration.create(plugin.getDataFolder().toPath().resolve("config.yml"));
 
         setSounds();
     }

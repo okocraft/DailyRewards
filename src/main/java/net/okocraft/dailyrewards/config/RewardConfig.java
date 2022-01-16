@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.config;
 
-import com.github.siroshun09.configapi.bukkit.BukkitYaml;
-import com.github.siroshun09.configapi.bukkit.BukkitYamlFactory;
+import com.github.siroshun09.configapi.yaml.YamlConfiguration;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.reward.Reward;
 import net.okocraft.dailyrewards.reward.RewardLoader;
@@ -12,11 +11,12 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class RewardConfig {
-    private final BukkitYaml yaml;
+
+    private final YamlConfiguration yaml;
     private final List<Reward> rewards;
 
     public RewardConfig(@NotNull DailyRewards plugin) {
-        this.yaml = BukkitYamlFactory.loadUnsafe(plugin, "rewards.yml");
+        this.yaml = YamlConfiguration.create(plugin.getDataFolder().toPath().resolve("rewards.yml"));
         this.rewards = RewardLoader.load(yaml);
     }
 

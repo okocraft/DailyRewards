@@ -1,6 +1,6 @@
 package net.okocraft.dailyrewards.data;
 
-import com.github.siroshun09.configapi.bukkit.BukkitYamlFactory;
+import com.github.siroshun09.configapi.yaml.YamlConfiguration;
 import net.okocraft.dailyrewards.DailyRewards;
 import org.jetbrains.annotations.NotNull;
 
@@ -96,9 +96,11 @@ public class ReceiveData implements Closeable {
             return;
         }
 
-        BukkitYamlFactory
-                .load(filePath)
-                .getStringList(DATE_TIME_FORMATTER.format(date))
+        var yaml = YamlConfiguration.create(filePath);
+
+        yaml.load();
+
+        yaml.getStringList(DATE_TIME_FORMATTER.format(date))
                 .forEach(this::addUuidOrIgnore);
     }
 
@@ -113,7 +115,7 @@ public class ReceiveData implements Closeable {
     }
 
     public void save() throws IOException {
-        var yaml = BukkitYamlFactory.getBukkitYaml(filePath);
+        var yaml = YamlConfiguration.create(filePath);
 
         yaml.set(
                 DATE_TIME_FORMATTER.format(date),

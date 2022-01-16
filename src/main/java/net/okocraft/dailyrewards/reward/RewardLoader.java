@@ -1,6 +1,6 @@
 package net.okocraft.dailyrewards.reward;
 
-import com.github.siroshun09.configapi.common.Configuration;
+import com.github.siroshun09.configapi.api.Configuration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public final class RewardLoader {
     public static @NotNull List<Reward> load(@NotNull Configuration config) {
         List<Reward> result = new ArrayList<>();
 
-        for (String rootKey : config.getKeys()) {
+        for (String rootKey : config.getKeyList()) {
             Reward reward = new Reward(
                     rootKey,
                     config.getString(rootKey + ".message", "&7* ログインボーナスを受け取りました。"),
