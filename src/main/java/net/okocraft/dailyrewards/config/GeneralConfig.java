@@ -18,12 +18,19 @@ public class GeneralConfig {
     public GeneralConfig(@NotNull DailyRewards plugin) {
         this.yaml = YamlConfiguration.create(plugin.getDataFolder().toPath().resolve("config.yml"));
 
-        setSounds();
+        try (yaml) {
+            yaml.load();
+            setSounds();
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load config.yml", e);
+        }
     }
 
     public void reload() throws IOException {
-        yaml.reload();
-        setSounds();
+        try (yaml) {
+            yaml.load();
+            setSounds();
+        }
     }
 
     public boolean isAutoReceiveEnabled() {

@@ -17,13 +17,22 @@ public class RewardConfig {
 
     public RewardConfig(@NotNull DailyRewards plugin) {
         this.yaml = YamlConfiguration.create(plugin.getDataFolder().toPath().resolve("rewards.yml"));
-        this.rewards = RewardLoader.load(yaml);
+
+        try (yaml) {
+            yaml.load();
+            this.rewards = RewardLoader.load(yaml);
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load rewards.yml", e);
+        }
     }
 
     public void reload() throws IOException {
-        yaml.reload();
         rewards.clear();
-        rewards.addAll(RewardLoader.load(yaml));
+
+        try (yaml) {
+            yaml.load();
+            rewards.addAll(RewardLoader.load(yaml));
+        }
     }
 
     @NotNull
