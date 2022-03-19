@@ -62,7 +62,7 @@ public class SetCommand extends AbstractCommand {
             return CommandResult.INVALID_ARGUMENTS;
         }
 
-        if (!target.hasPlayedBefore()) {
+        if (false && !target.hasPlayedBefore()) {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_SET_TARGET_NOT_JOINED, sender)
                     .replace(Placeholders.PLAYER_NAME, secondArgument)
