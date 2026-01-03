@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
-import com.github.siroshun09.mccommand.bukkit.argument.parser.BukkitParser;
 import com.github.siroshun09.mccommand.common.AbstractCommand;
 import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.argument.Argument;
@@ -60,7 +59,7 @@ public class ResetCommand extends AbstractCommand {
             }
         }
 
-        OfflinePlayer target = BukkitParser.OFFLINE_PLAYER.parse(secondArgument);
+        OfflinePlayer target = this.plugin.getServer().getOfflinePlayerIfCached(secondArgument.get());
 
         if (target == null) {
             plugin.getMessageBuilder()

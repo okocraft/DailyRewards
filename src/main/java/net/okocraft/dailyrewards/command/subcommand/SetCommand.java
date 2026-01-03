@@ -1,10 +1,8 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
-import com.github.siroshun09.mccommand.bukkit.argument.parser.BukkitParser;
 import com.github.siroshun09.mccommand.common.AbstractCommand;
 import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.argument.Argument;
-import com.github.siroshun09.mccommand.common.argument.parser.BasicParser;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
@@ -18,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -51,7 +50,7 @@ public class SetCommand extends AbstractCommand {
         }
 
         Argument secondArgument = arguments.get(1);
-        OfflinePlayer target = BukkitParser.OFFLINE_PLAYER.parse(secondArgument);
+        OfflinePlayer target = this.plugin.getServer().getOfflinePlayerIfCached(secondArgument.get());
 
         if (target == null) {
             plugin.getMessageBuilder()
@@ -72,7 +71,11 @@ public class SetCommand extends AbstractCommand {
         }
 
         Argument thirdArgument = arguments.get(2);
-        Boolean bool = BasicParser.BOOLEAN.parse(thirdArgument);
+        Boolean bool = switch (thirdArgument.get().toLowerCase(Locale.ROOT)) {
+           case "true" -> true;
+           case "false" -> false;
+           default -> null;
+        };
 
         if (bool == null) {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_SET_INVALID_BOOLEAN, sender);

@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
-import com.github.siroshun09.mccommand.bukkit.argument.parser.BukkitParser;
 import com.github.siroshun09.mccommand.common.AbstractCommand;
 import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.argument.Argument;
@@ -47,7 +46,7 @@ public class GiveCommand extends AbstractCommand {
         }
 
         Argument secondArgument = arguments.get(1);
-        Player target = BukkitParser.PLAYER.parse(secondArgument);
+        Player target = this.plugin.getServer().getPlayer(secondArgument.get());
 
         if (target == null) {
             plugin.getMessageBuilder()
