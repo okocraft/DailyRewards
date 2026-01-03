@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.lang;
 
 import com.github.siroshun09.mcmessage.translation.Translation;
-import com.github.siroshun09.mcmessage.translation.TranslationRegistry;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.okocraft.dailyrewards.DailyRewards;
@@ -14,7 +13,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -27,18 +28,25 @@ public class LanguageManager {
 
     private final DailyRewards plugin;
     private final Path directory;
-    private final TranslationRegistry registry;
+    private final Map<Locale, Translation> translations = new HashMap<>();
 
     public LanguageManager(@NotNull DailyRewards plugin) {
         this.plugin = plugin;
         this.directory = plugin.getDataFolder().toPath().resolve("lang");
-        this.registry = TranslationRegistry.create();
     }
 
     @NotNull
     public String getMessage(@NotNull DefaultMessage msg, @NotNull Audience receiver) {
-        String message = this.registry.getMessage(msg.getKey(), receiver.getOrDefaultFrom(Identity.LOCALE, Locale::getDefault));
-        return message != null ? message : msg.getMessage();
+        Locale locale = receiver.getOrDefaultFrom(Identity.LOCALE, Locale::getDefault);
+        Translation translation = this.translations.get(locale);
+        if (translation != null) {
+            String message = translation.getMessage(msg.getKey());
+            if (message != null) {
+                return message;
+            }
+        }
+
+        return msg.getMessage();
     }
 
     public void reload() throws IOException {
@@ -46,23 +54,25 @@ public class LanguageManager {
             Files.createDirectories(directory);
         }
 
-        registry.register(loadDefaultLanguage());
+        loadDefaultLanguage();
         loadCustomLanguageFiles();
 
         plugin.getLogger().info(
-                "Loaded languages: " + registry.getTranslations()
+                "Loaded languages: " + this.translations.values()
                         .stream()
                         .map(Translation::getLocale)
                         .map(Locale::toString)
+                        .sorted()
                         .collect(Collectors.joining(", ")));
     }
 
-    private @NotNull Translation loadDefaultLanguage() throws IOException {
+    private void loadDefaultLanguage() throws IOException {
         Locale locale = DefaultMessage.getDefaultLocale();
         Path defFile = directory.resolve(locale.toString() + FILE_EXTENSION);
 
+        Translation translation;
         if (Files.exists(defFile)) {
-            return getLoadedLanguageFile(defFile).toTranslation(locale);
+            translation = getLoadedLanguageFile(defFile).toTranslation(locale);
         } else {
             try (BufferedWriter writer = Files.newBufferedWriter(defFile, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
                 StringBuilder builder = new StringBuilder();
@@ -74,11 +84,13 @@ public class LanguageManager {
                 }
             }
 
-            return Translation.of(
+            translation = Translation.of(
                     locale,
                     Stream.of(DefaultMessage.values()).collect(Collectors.toMap(DefaultMessage::getKey, DefaultMessage::getMessage))
             );
         }
+
+        this.translations.put(locale, translation);
     }
 
     private void loadCustomLanguageFiles() throws IOException {
@@ -91,7 +103,7 @@ public class LanguageManager {
                     .filter(Objects::nonNull)
                     .map(PropertiesFileLoader::toTranslation)
                     .filter(Objects::nonNull)
-                    .forEach(registry::register);
+                    .forEach(translation -> this.translations.put(translation.getLocale(), translation));
         }
     }
 
