@@ -18,6 +18,7 @@ package com.github.siroshun09.mcmessage.loader;
 
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.util.InvalidMessage;
+import net.kyori.adventure.translation.Translator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -92,7 +93,7 @@ class PropertiesFileLoader implements LanguageLoader {
     @Override
     public @Nullable Locale parseLocaleFromFileName() {
         String fileName = filePath.getFileName().toString();
-        return Translation.parseLocale(fileName.substring(0, fileName.length() - 11)); // .properties
+        return Translator.parseLocale(fileName.substring(0, fileName.length() - 11)); // .properties
     }
 
     @Override

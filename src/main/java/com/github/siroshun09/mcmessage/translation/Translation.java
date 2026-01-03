@@ -28,29 +28,6 @@ public interface Translation {
         return new TranslationImpl(locale, messages);
     }
 
-    static @Nullable Locale parseLocale(String str) {
-        if (str == null || str.isEmpty()) {
-            return null;
-        }
-
-        String[] segments = str.split("_", 3);
-        int length = segments.length;
-
-        if (length == 1) {
-            return new Locale(str); // language
-        }
-
-        if (length == 2) {
-            return new Locale(segments[0], segments[1]); // language + country
-        }
-
-        if (length == 3) {
-            return new Locale(segments[0], segments[1], segments[2]); // language + country + variant
-        }
-
-        return null;
-    }
-
     @Nullable String getMessage(@NotNull String key);
 
     @NotNull Locale getLocale();
