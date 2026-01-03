@@ -16,7 +16,6 @@
 
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mcmessage.translation.Translation;
 import net.kyori.adventure.translation.Translator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,17 +33,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-public class PropertiesFileLoader {
+class PropertiesFileLoader {
 
     private final Path filePath;
     private final Map<String, String> messages;
 
-    public PropertiesFileLoader(@NotNull Path filePath) {
+    PropertiesFileLoader(@NotNull Path filePath) {
         this.filePath = filePath;
         this.messages = new HashMap<>();
     }
 
-    public @NotNull @Unmodifiable Set<InvalidMessage> load() throws IOException {
+    @NotNull @Unmodifiable Set<InvalidMessage> load() throws IOException {
         if (!Files.exists(filePath)) {
             return Collections.emptySet();
         }
@@ -82,16 +81,16 @@ public class PropertiesFileLoader {
         return Collections.unmodifiableSet(invalidMessages);
     }
 
-    public @NotNull Translation toTranslation(@NotNull Locale locale) {
-        return Translation.of(locale, messages);
+    @NotNull LanguageManager.Translation toTranslation(@NotNull Locale locale) {
+        return new LanguageManager.Translation(locale, messages);
     }
 
-    public @Nullable Translation toTranslation() {
+    @Nullable LanguageManager.Translation toTranslation() {
         Locale locale = parseLocaleFromFileName();
         return locale != null ? toTranslation(locale) : null;
     }
 
-    public @Nullable Locale parseLocaleFromFileName() {
+    private @Nullable Locale parseLocaleFromFileName() {
         String fileName = filePath.getFileName().toString();
         return Translator.parseLocale(fileName.substring(0, fileName.length() - 11)); // .properties
     }

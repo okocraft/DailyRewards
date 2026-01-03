@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mcmessage.translation.Translation;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.okocraft.dailyrewards.DailyRewards;
@@ -40,7 +39,7 @@ public class LanguageManager {
         Locale locale = receiver.getOrDefaultFrom(Identity.LOCALE, Locale::getDefault);
         Translation translation = this.translations.get(locale);
         if (translation != null) {
-            String message = translation.getMessage(msg.getKey());
+            String message = translation.messages.get(msg.getKey());
             if (message != null) {
                 return message;
             }
@@ -60,7 +59,7 @@ public class LanguageManager {
         plugin.getLogger().info(
                 "Loaded languages: " + this.translations.values()
                         .stream()
-                        .map(Translation::getLocale)
+                        .map(Translation::locale)
                         .map(Locale::toString)
                         .sorted()
                         .collect(Collectors.joining(", ")));
@@ -84,7 +83,7 @@ public class LanguageManager {
                 }
             }
 
-            translation = Translation.of(
+            translation = new Translation(
                     locale,
                     Stream.of(DefaultMessage.values()).collect(Collectors.toMap(DefaultMessage::getKey, DefaultMessage::getMessage))
             );
@@ -103,7 +102,7 @@ public class LanguageManager {
                     .filter(Objects::nonNull)
                     .map(PropertiesFileLoader::toTranslation)
                     .filter(Objects::nonNull)
-                    .forEach(translation -> this.translations.put(translation.getLocale(), translation));
+                    .forEach(translation -> this.translations.put(translation.locale(), translation));
         }
     }
 
@@ -113,8 +112,7 @@ public class LanguageManager {
         return loader;
     }
 
-    @Nullable
-    private PropertiesFileLoader getLoadedLanguageFileUnsafe(@NotNull Path path) {
+    private @Nullable PropertiesFileLoader getLoadedLanguageFileUnsafe(@NotNull Path path) {
         try {
             return getLoadedLanguageFile(path);
         } catch (IOException e) {
@@ -125,5 +123,8 @@ public class LanguageManager {
 
     private void printInvalidMessage(@NotNull InvalidMessage invalid) {
         plugin.getLogger().warning("Invalid message: " + invalid);
+    }
+
+    record Translation(@NotNull Locale locale, @NotNull Map<String, String> messages) {
     }
 }

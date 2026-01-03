@@ -18,65 +18,9 @@ package net.okocraft.dailyrewards.lang;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
-public class InvalidMessage {
-
-    private final int line;
-    private final String str;
-    private final Reason reason;
-
-    public InvalidMessage(int line, @NotNull String str, @NotNull Reason reason) {
-        this.line = line;
-        this.str = Objects.requireNonNull(str);
-        this.reason = Objects.requireNonNull(reason);
-    }
-
-    public int getLine() {
-        return line;
-    }
-
-
-    public @NotNull String getString() {
-        return str;
-    }
-
-    public @NotNull Reason getReason() {
-        return reason;
-    }
-
+public record InvalidMessage(int line, @NotNull String str, @NotNull Reason reason) {
     public enum Reason {
         INVALID_FORMAT,
         DUPLICATE_KEY
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o instanceof InvalidMessage) {
-            InvalidMessage that = (InvalidMessage) o;
-            return getLine() == that.getLine() &&
-                    str.equals(that.str) &&
-                    getReason() == that.getReason();
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getLine(), str, getReason());
-    }
-
-    @Override
-    public String toString() {
-        return "InvalidMessage{" +
-                "line=" + line +
-                ", str='" + str + '\'' +
-                ", reason=" + reason +
-                '}';
     }
 }
