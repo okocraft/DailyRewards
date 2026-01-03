@@ -18,12 +18,12 @@ package com.github.siroshun09.mccommand.bukkit.sender;
 
 import com.github.siroshun09.mccommand.common.sender.ConsoleSender;
 import com.github.siroshun09.mccommand.common.sender.Sender;
-import com.github.siroshun09.mcmessage.translation.Translation;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -65,12 +65,9 @@ public class BukkitSender implements Sender {
         return sender.getName();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void sendMessage(@NotNull String message) {
-        sender.sendMessage(message);
+    public @NotNull Iterable<? extends Audience> audiences() {
+        return List.of(this.sender);
     }
 
     /**
@@ -79,20 +76,6 @@ public class BukkitSender implements Sender {
     @Override
     public boolean hasPermission(@NotNull String perm) {
         return sender.hasPermission(perm);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull Locale getLocale() {
-        Locale locale = null;
-
-        if (sender instanceof Player) {
-            locale = Translation.parseLocale(((Player) sender).getLocale());
-        }
-
-        return locale != null ? locale : Locale.getDefault();
     }
 
     @Override

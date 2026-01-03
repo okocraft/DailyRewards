@@ -7,7 +7,7 @@ import com.github.siroshun09.mccommand.common.SubCommandHolder;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import com.github.siroshun09.mccommand.common.sender.Sender;
-import com.github.siroshun09.mcmessage.MessageReceiver;
+import net.kyori.adventure.audience.Audience;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.command.subcommand.GiveCommand;
 import net.okocraft.dailyrewards.command.subcommand.ReceiveCommand;
@@ -109,7 +109,7 @@ public class RewardCommand extends AbstractCommand {
         }
     }
 
-    private void sendUsage(@NotNull MessageReceiver receiver) {
+    private void sendUsage(@NotNull Audience receiver) {
         plugin.getMessageBuilder()
                 .getMessage(DefaultMessage.HELP_TOP, receiver)
                 .replace(Placeholders.VERSION, plugin)

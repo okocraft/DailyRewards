@@ -1,7 +1,5 @@
 package net.okocraft.dailyrewards.processor;
 
-import com.github.siroshun09.mccommand.bukkit.sender.BukkitSender;
-import com.github.siroshun09.mcmessage.MessageReceiver;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import org.bukkit.Sound;
@@ -19,7 +17,6 @@ public class PlayerReceiveProcessor {
 
     public void tryReceive(@NotNull Player receiver) {
         PlayerCheckProcessor.Result checkResult = plugin.getProcessors().getPlayerCheckProcessor().check(receiver);
-        MessageReceiver messageReceiver = new BukkitSender(receiver);
 
         switch (checkResult) {
             case OK:
@@ -33,7 +30,7 @@ public class PlayerReceiveProcessor {
                         plugin.getGeneralConfig().getCannotReceiveSoundVolume(),
                         plugin.getGeneralConfig().getCannotReceiveSoundPitch()
                 );
-                plugin.getMessageBuilder().sendMessage(DefaultMessage.ERROR_ALREADY_RECEIVED, messageReceiver);
+                plugin.getMessageBuilder().sendMessage(DefaultMessage.ERROR_ALREADY_RECEIVED, receiver);
                 return;
             case DISABLED_WORLD:
                 playSound(
@@ -42,8 +39,8 @@ public class PlayerReceiveProcessor {
                         plugin.getGeneralConfig().getCannotReceiveSoundVolume(),
                         plugin.getGeneralConfig().getCannotReceiveSoundPitch()
                 );
-                plugin.getMessageBuilder().sendMessage(DefaultMessage.ERROR_DISABLED_WORLD_1, messageReceiver);
-                plugin.getMessageBuilder().sendMessage(DefaultMessage.ERROR_DISABLED_WORLD_2, messageReceiver);
+                plugin.getMessageBuilder().sendMessage(DefaultMessage.ERROR_DISABLED_WORLD_1, receiver);
+                plugin.getMessageBuilder().sendMessage(DefaultMessage.ERROR_DISABLED_WORLD_2, receiver);
                 return;
             default:
                 plugin.getLogger().warning("Unknown check result: " + checkResult);

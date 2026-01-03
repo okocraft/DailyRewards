@@ -16,20 +16,19 @@
 
 package com.github.siroshun09.mcmessage.builder;
 
-import com.github.siroshun09.mcmessage.MessageReceiver;
 import com.github.siroshun09.mcmessage.message.Message;
 import com.github.siroshun09.mcmessage.replacer.FunctionalPlaceholder;
 import com.github.siroshun09.mcmessage.replacer.Placeholder;
 import com.github.siroshun09.mcmessage.replacer.Replacer;
-import com.github.siroshun09.mcmessage.util.Colorizer;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
-public class PlainTextBuilder implements Builder<Message> {
+public class PlainTextBuilder {
 
     private final StringBuilder builder;
-    private boolean colorize;
 
     public PlainTextBuilder(@NotNull Message original) {
         Objects.requireNonNull(original);
@@ -70,22 +69,7 @@ public class PlainTextBuilder implements Builder<Message> {
         return replace(placeholder.toReplacer(value));
     }
 
-    @NotNull
-    public PlainTextBuilder setColorize(boolean colorize) {
-        this.colorize = colorize;
-        return this;
-    }
-
-    @Override
-    public @NotNull Message build() {
-        if (colorize) {
-            Colorizer.colorize(builder);
-        }
-
-        return builder::toString;
-    }
-
-    public void send(@NotNull MessageReceiver messageReceiver) {
-        messageReceiver.sendMessage(build());
+    public void send(@NotNull Audience receiver) {
+        receiver.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(this.builder.toString()));
     }
 }

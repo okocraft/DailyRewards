@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.processor;
 
-import com.github.siroshun09.mccommand.bukkit.sender.BukkitSender;
-import com.github.siroshun09.mcmessage.util.Colorizer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import net.okocraft.dailyrewards.lang.Placeholders;
@@ -42,12 +41,11 @@ public class RewardsGiveProcessor {
             }
         }
 
-        target.sendMessage(Colorizer.colorize(reward.getMessage()));
+        target.sendMessage(LegacyComponentSerializer.legacyAmpersand().deserialize(reward.getMessage()));
 
         if (fail) {
-            BukkitSender receiver = new BukkitSender(target);
-            plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.ERROR_FAILED_TO_RUN_COMMAND_1, receiver);
-            plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.ERROR_FAILED_TO_RUN_COMMAND_2, receiver);
+            plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.ERROR_FAILED_TO_RUN_COMMAND_1, target);
+            plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.ERROR_FAILED_TO_RUN_COMMAND_2, target);
         }
     }
 }

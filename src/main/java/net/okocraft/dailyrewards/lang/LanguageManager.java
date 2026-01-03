@@ -1,12 +1,13 @@
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mcmessage.MessageReceiver;
 import com.github.siroshun09.mcmessage.loader.LanguageLoader;
 import com.github.siroshun09.mcmessage.message.KeyedMessage;
 import com.github.siroshun09.mcmessage.message.Message;
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.translation.TranslationRegistry;
 import com.github.siroshun09.mcmessage.util.InvalidMessage;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identity;
 import net.okocraft.dailyrewards.DailyRewards;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,8 +41,8 @@ public class LanguageManager {
     }
 
     @NotNull
-    public Message getMessage(@NotNull DefaultMessage msg, @NotNull MessageReceiver receiver) {
-        return registry.getMessage(msg, receiver.getLocale());
+    public Message getMessage(@NotNull DefaultMessage msg, @NotNull Audience receiver) {
+        return registry.getMessage(msg, receiver.getOrDefaultFrom(Identity.LOCALE, Locale::getDefault));
     }
 
     public void reload() throws IOException {
