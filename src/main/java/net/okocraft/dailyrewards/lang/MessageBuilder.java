@@ -37,7 +37,7 @@ public class MessageBuilder {
 
     public void sendNoPermission(@NotNull Audience receiver, @NotNull Command command) {
         getMessageWithPrefix(DefaultMessage.ERROR_NO_PERMISSION, receiver)
-                .replace(Placeholders.COMMAND_PERM, command)
+                .replace(Placeholders.COMMAND_PERM, command.getName())
                 .send(receiver);
     }
 }

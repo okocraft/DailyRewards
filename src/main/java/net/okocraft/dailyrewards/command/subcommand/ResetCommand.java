@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
@@ -38,16 +37,16 @@ public class ResetCommand extends AbstractCommand {
             return;
         }
 
-        List<Argument> arguments = context.getArguments();
+        List<String> arguments = context.getArguments();
 
         if (arguments.size() < 2) {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.HELP_RESET, sender);
             return;
         }
 
-        Argument secondArgument = arguments.get(1);
+        String secondArgument = arguments.get(1);
 
-        if (secondArgument.get().equalsIgnoreCase("all")) {
+        if (secondArgument.equalsIgnoreCase("all")) {
             if (plugin.getReceiveData().reset()) {
                 this.plugin.getServer().getAsyncScheduler().runNow(
                         this.plugin,
@@ -61,7 +60,7 @@ public class ResetCommand extends AbstractCommand {
             }
         }
 
-        OfflinePlayer target = this.plugin.getServer().getOfflinePlayerIfCached(secondArgument.get());
+        OfflinePlayer target = this.plugin.getServer().getOfflinePlayerIfCached(secondArgument);
 
         if (target == null) {
             plugin.getMessageBuilder()
@@ -93,7 +92,7 @@ public class ResetCommand extends AbstractCommand {
 
     @Override
     public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
-        List<Argument> arguments = context.getArguments();
+        List<String> arguments = context.getArguments();
         CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
@@ -113,7 +112,7 @@ public class ResetCommand extends AbstractCommand {
                     .collect(Collectors.toCollection(() -> result));
 
             return StringUtil.copyPartialMatches(
-                    arguments.get(1).get(),
+                    arguments.get(1),
                     result,
                     new ArrayList<>()
             );

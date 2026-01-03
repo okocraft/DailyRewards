@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mccommand.common.context;
 
-import com.github.siroshun09.mccommand.common.argument.Argument;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +29,7 @@ import java.util.Objects;
 public class SimpleCommandContext implements CommandContext {
 
     private final CommandSender sender;
-    private final List<Argument> arguments;
+    private final List<String> arguments;
 
     /**
      * Creates a {@link SimpleCommandContext}
@@ -38,7 +37,7 @@ public class SimpleCommandContext implements CommandContext {
      * @param sender    the commander
      * @param arguments the given arguments
      */
-    public SimpleCommandContext(@NotNull CommandSender sender, @NotNull List<Argument> arguments) {
+    public SimpleCommandContext(@NotNull CommandSender sender, @NotNull List<String> arguments) {
         this.sender = sender;
         this.arguments = List.copyOf(arguments);
     }
@@ -67,7 +66,7 @@ public class SimpleCommandContext implements CommandContext {
      */
     @NotNull
     @Override
-    public List<Argument> getArguments() {
+    public List<String> getArguments() {
         return arguments;
     }
 
@@ -105,7 +104,7 @@ public class SimpleCommandContext implements CommandContext {
      */
     public static class SimpleCommandContextBuilder {
         private CommandSender sender;
-        private List<Argument> arguments;
+        private List<String> arguments;
 
         private SimpleCommandContextBuilder() {
         }
@@ -126,29 +125,19 @@ public class SimpleCommandContext implements CommandContext {
          *
          * @param arguments the given arguments
          * @return the builder instance
-         */
-        public SimpleCommandContextBuilder setArguments(List<Argument> arguments) {
-            this.arguments = arguments;
-            return this;
-        }
-
-        /**
-         * Sets the arguments.
-         *
-         * @param arguments the given arguments
-         * @return the builder instance
          * @throws NullPointerException if arguments is null
          */
         public SimpleCommandContextBuilder setArguments(@NotNull String[] arguments) {
             Objects.requireNonNull(arguments);
-            List<Argument> result = new ArrayList<>();
+            List<String> result = new ArrayList<>();
 
-            for (int i = 0; i < arguments.length; i++) {
-                String arg = Objects.requireNonNull(arguments[i]);
-                result.add(Argument.of(i, arg));
+            for (String argument : arguments) {
+                String arg = Objects.requireNonNull(argument);
+                result.add(arg);
             }
 
-            return setArguments(result);
+            this.arguments = result;
+            return this;
         }
 
         /**

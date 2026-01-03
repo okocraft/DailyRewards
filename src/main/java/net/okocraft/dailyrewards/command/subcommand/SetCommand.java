@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
@@ -41,15 +40,15 @@ public class SetCommand extends AbstractCommand {
             return;
         }
 
-        List<Argument> arguments = context.getArguments();
+        List<String> arguments = context.getArguments();
 
         if (arguments.size() < 3) {
             plugin.getMessageBuilder().sendMessage(DefaultMessage.HELP_SET, sender);
             return;
         }
 
-        Argument secondArgument = arguments.get(1);
-        OfflinePlayer target = this.plugin.getServer().getOfflinePlayerIfCached(secondArgument.get());
+        String secondArgument = arguments.get(1);
+        OfflinePlayer target = this.plugin.getServer().getOfflinePlayerIfCached(secondArgument);
 
         if (target == null) {
             plugin.getMessageBuilder()
@@ -60,8 +59,7 @@ public class SetCommand extends AbstractCommand {
             return;
         }
 
-        Argument thirdArgument = arguments.get(2);
-        Boolean bool = switch (thirdArgument.get().toLowerCase(Locale.ROOT)) {
+        Boolean bool = switch (arguments.get(2).toLowerCase(Locale.ROOT)) {
            case "true" -> true;
            case "false" -> false;
            default -> null;
@@ -84,7 +82,7 @@ public class SetCommand extends AbstractCommand {
 
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(msg, sender)
-                    .replace(Placeholders.PLAYER_NAME, Objects.requireNonNullElse(target.getName(), secondArgument.get()))
+                    .replace(Placeholders.PLAYER_NAME, Objects.requireNonNullElse(target.getName(), secondArgument))
                     .replace(Placeholders.UUID, target.getUniqueId())
                     .send(sender);
 
@@ -95,7 +93,7 @@ public class SetCommand extends AbstractCommand {
 
     @Override
     public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
-        List<Argument> arguments = context.getArguments();
+        List<String> arguments = context.getArguments();
         CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
@@ -119,7 +117,7 @@ public class SetCommand extends AbstractCommand {
                     .collect(Collectors.toCollection(() -> result));
 
             return StringUtil.copyPartialMatches(
-                    arguments.get(1).get(),
+                    arguments.get(1),
                     result,
                     new ArrayList<>()
             );
@@ -127,7 +125,7 @@ public class SetCommand extends AbstractCommand {
 
         if (arguments.size() == 3) {
             return StringUtil.copyPartialMatches(
-                    arguments.get(2).get(),
+                    arguments.get(2),
                     TRUE_OR_FALSE,
                     new ArrayList<>()
             );

@@ -2,7 +2,6 @@ package net.okocraft.dailyrewards.command;
 
 import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mccommand.common.SubCommandHolder;
-import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import com.github.siroshun09.mccommand.common.context.SimpleCommandContext;
 import io.papermc.paper.command.brigadier.BasicCommand;
@@ -66,13 +65,13 @@ public class RewardCommand implements BasicCommand {
             return;
         }
 
-        Argument firstArgument = context.getArguments().get(0);
+        String firstArgument = context.getArguments().getFirst();
         Optional<Command> subCommand = subCommandHolder.searchOptional(firstArgument);
 
         if (subCommand.isPresent()) {
             subCommand.get().onExecution(context);
         } else {
-            if (!firstArgument.get().equalsIgnoreCase("help")) {
+            if (!firstArgument.equalsIgnoreCase("help")) {
                 plugin.getMessageBuilder()
                         .getMessageWithPrefix(DefaultMessage.ERROR_INVALID_ARGUMENT, sender)
                         .replace(Placeholders.ARG, firstArgument)
@@ -84,17 +83,17 @@ public class RewardCommand implements BasicCommand {
 
     public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
         CommandSender sender = context.getSender();
-        List<Argument> args = context.getArguments();
+        List<String> args = context.getArguments();
 
         if (args.isEmpty() || !sender.hasPermission(this.permission())) {
             return Collections.emptyList();
         }
 
-        Argument firstArgument = context.getArguments().get(0);
+        String firstArgument = context.getArguments().getFirst();
 
         if (args.size() == 1) {
             return StringUtil.copyPartialMatches(
-                    firstArgument.get(),
+                    firstArgument,
                     subCommandHolder.getSubCommands()
                             .stream()
                             .filter(c -> sender.hasPermission(c.getPermission()))

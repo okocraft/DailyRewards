@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
@@ -17,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GiveCommand extends AbstractCommand {
 
@@ -37,15 +35,15 @@ public class GiveCommand extends AbstractCommand {
             return;
         }
 
-        List<Argument> arguments = context.getArguments();
+        List<String> arguments = context.getArguments();
 
         if (arguments.size() < 3) {
             plugin.getMessageBuilder().sendMessage(DefaultMessage.HELP_GIVE, sender);
             return;
         }
 
-        Argument secondArgument = arguments.get(1);
-        Player target = this.plugin.getServer().getPlayer(secondArgument.get());
+        String secondArgument = arguments.get(1);
+        Player target = this.plugin.getServer().getPlayer(secondArgument);
 
         if (target == null) {
             plugin.getMessageBuilder()
@@ -55,11 +53,11 @@ public class GiveCommand extends AbstractCommand {
             return;
         }
 
-        Argument thirdArgument = arguments.get(2);
+        String thirdArgument = arguments.get(2);
         Reward reward =
                 plugin.getRewardConfig().getRewards()
                         .stream()
-                        .filter(r -> r.getName().equalsIgnoreCase(thirdArgument.get()))
+                        .filter(r -> r.getName().equalsIgnoreCase(thirdArgument))
                         .findFirst()
                         .orElse(null);
 
@@ -87,7 +85,7 @@ public class GiveCommand extends AbstractCommand {
 
     @Override
     public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
-        List<Argument> arguments = context.getArguments();
+        List<String> arguments = context.getArguments();
         CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
@@ -95,27 +93,27 @@ public class GiveCommand extends AbstractCommand {
         }
 
         if (arguments.size() == 2) {
-            Argument secondArguments = arguments.get(1);
+            String secondArguments = arguments.get(1);
 
             return StringUtil.copyPartialMatches(
-                    secondArguments.get(),
+                    secondArguments,
                     plugin.getServer().getOnlinePlayers()
                             .stream()
                             .map(HumanEntity::getName)
-                            .collect(Collectors.toUnmodifiableList()),
+                            .toList(),
                     new ArrayList<>()
             );
         }
 
         if (arguments.size() == 3) {
-            Argument thirdArguments = arguments.get(2);
+            String thirdArguments = arguments.get(2);
 
             return StringUtil.copyPartialMatches(
-                    thirdArguments.get(),
+                    thirdArguments,
                     plugin.getRewardConfig().getRewards()
                             .stream()
                             .map(Reward::getName)
-                            .collect(Collectors.toUnmodifiableList()),
+                            .toList(),
                     new ArrayList<>()
             );
         }

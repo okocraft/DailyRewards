@@ -1,8 +1,7 @@
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mccommand.common.Command;
-import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mcmessage.replacer.FunctionalPlaceholder;
+import com.github.siroshun09.mcmessage.replacer.Placeholder;
 import net.okocraft.dailyrewards.reward.Reward;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -14,12 +13,12 @@ import static com.github.siroshun09.mcmessage.replacer.FunctionalPlaceholder.cre
 
 public final class Placeholders {
     public static final FunctionalPlaceholder<Player> PLAYER = create("%player%", Player::getName);
-    public static final FunctionalPlaceholder<Argument> PLAYER_NAME = create("%player%", Argument::get);
+    public static final Placeholder PLAYER_NAME = Placeholder.create("%player%");
     public static final FunctionalPlaceholder<UUID> UUID = create("%uuid%", java.util.UUID::toString);
     public static final FunctionalPlaceholder<Reward> REWARD = create("%reward%", Reward::getName);
-    public static final FunctionalPlaceholder<Argument> REWARD_NAME= create("%reward%", Argument::get);
+    public static final Placeholder REWARD_NAME= Placeholder.create("%reward%");
     public static final FunctionalPlaceholder<Path> FILE_NAME = create("%file%", p -> p.getFileName().toString());
-    public static final FunctionalPlaceholder<Command> COMMAND_PERM = create("%perm%", Command::getPermission);
-    public static final FunctionalPlaceholder<Argument> ARG =  create("%arg%", Argument::get);
+    public static final Placeholder COMMAND_PERM = Placeholder.create("%perm%");
+    public static final Placeholder ARG =  Placeholder.create("%arg%");
     public static final FunctionalPlaceholder<Plugin> VERSION = create("%version%", p -> p.getDescription().getVersion());
 }

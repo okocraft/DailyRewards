@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mccommand.common;
 
-import com.github.siroshun09.mccommand.common.argument.Argument;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -73,18 +72,6 @@ public class SubCommandHolder {
     @NotNull
     public List<Command> getSubCommands() {
         return subCommands;
-    }
-
-    /**
-     * Gets the command whose name matches the string contained in the {@link Argument}.
-     *
-     * @param argument the argument to search
-     * @return the search result
-     */
-    @NotNull
-    public Optional<Command> searchOptional(@NotNull Argument argument) {
-        Objects.requireNonNull(argument);
-        return searchOptional(argument.get());
     }
 
     /**
