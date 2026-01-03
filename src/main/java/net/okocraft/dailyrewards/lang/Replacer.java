@@ -35,7 +35,7 @@ public record Replacer(@NotNull String placeholder, @NotNull String replacement)
         return str.replace(this.placeholder, this.replacement);
     }
 
-    public @NotNull StringBuilder replace(@NotNull StringBuilder builder) {
+    public void replace(@NotNull StringBuilder builder) {
         int length = this.placeholder.length();
         int startIndex = builder.indexOf(this.placeholder);
 
@@ -44,6 +44,5 @@ public record Replacer(@NotNull String placeholder, @NotNull String replacement)
             startIndex = builder.indexOf(this.placeholder, startIndex + 1);
         }
 
-        return builder;
     }
 }
