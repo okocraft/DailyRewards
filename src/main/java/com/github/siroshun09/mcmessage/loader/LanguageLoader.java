@@ -17,7 +17,6 @@
 package com.github.siroshun09.mcmessage.loader;
 
 import com.github.siroshun09.mcmessage.MessageHoldable;
-import com.github.siroshun09.mcmessage.message.KeyedMessage;
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.util.InvalidMessage;
 import org.jetbrains.annotations.Contract;
