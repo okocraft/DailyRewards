@@ -5,11 +5,11 @@ import com.github.siroshun09.mccommand.common.AbstractCommand;
 import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
-import com.github.siroshun09.mccommand.common.sender.Sender;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import net.okocraft.dailyrewards.lang.Placeholders;
 import net.okocraft.dailyrewards.reward.Reward;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
@@ -32,7 +32,7 @@ public class GiveCommand extends AbstractCommand {
 
     @Override
     public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
-        Sender sender = context.getSender();
+        CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
@@ -91,7 +91,7 @@ public class GiveCommand extends AbstractCommand {
     @Override
     public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
         List<Argument> arguments = context.getArguments();
-        Sender sender = context.getSender();
+        CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             return Collections.emptyList();

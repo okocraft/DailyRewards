@@ -18,7 +18,7 @@ package com.github.siroshun09.mccommand.common.context;
 
 import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mccommand.common.argument.Argument;
-import com.github.siroshun09.mccommand.common.sender.Sender;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.Objects;
 public class SimpleCommandContext implements CommandContext {
 
     private final Command command;
-    private final Sender sender;
+    private final CommandSender sender;
     private final List<Argument> arguments;
     private final String label;
 
@@ -43,7 +43,7 @@ public class SimpleCommandContext implements CommandContext {
      * @param arguments the given arguments
      * @param label     the string used to specify the command
      */
-    public SimpleCommandContext(@NotNull Command command, @NotNull Sender sender,
+    public SimpleCommandContext(@NotNull Command command, @NotNull CommandSender sender,
                                 @NotNull List<Argument> arguments, @NotNull String label) {
         this.command = command;
         this.sender = sender;
@@ -75,7 +75,7 @@ public class SimpleCommandContext implements CommandContext {
      */
     @NotNull
     @Override
-    public Sender getSender() {
+    public CommandSender getSender() {
         return sender;
     }
 
@@ -135,7 +135,7 @@ public class SimpleCommandContext implements CommandContext {
      */
     public static class SimpleCommandContextBuilder {
         private Command command;
-        private Sender sender;
+        private CommandSender sender;
         private List<Argument> arguments;
         private String label;
 
@@ -159,7 +159,7 @@ public class SimpleCommandContext implements CommandContext {
          * @param sender the commander
          * @return the builder instance
          */
-        public SimpleCommandContextBuilder setSender(Sender sender) {
+        public SimpleCommandContextBuilder setSender(CommandSender sender) {
             this.sender = sender;
             return this;
         }

@@ -18,7 +18,7 @@ package com.github.siroshun09.mccommand.common.context;
 
 import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mccommand.common.argument.Argument;
-import com.github.siroshun09.mccommand.common.sender.Sender;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -41,7 +41,7 @@ public interface CommandContext {
      *
      * @return the commander
      */
-    @NotNull Sender getSender();
+    @NotNull CommandSender getSender();
 
     /**
      * Gets the given arguments.

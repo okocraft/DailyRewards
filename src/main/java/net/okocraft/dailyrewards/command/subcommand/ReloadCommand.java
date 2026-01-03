@@ -3,10 +3,10 @@ package net.okocraft.dailyrewards.command.subcommand;
 import com.github.siroshun09.mccommand.common.AbstractCommand;
 import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
-import com.github.siroshun09.mccommand.common.sender.Sender;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import net.okocraft.dailyrewards.lang.Placeholders;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class ReloadCommand extends AbstractCommand {
 
     @Override
     public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
-        Sender sender = context.getSender();
+        CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);

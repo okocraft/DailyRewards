@@ -3,9 +3,9 @@ package net.okocraft.dailyrewards.command.subcommand;
 import com.github.siroshun09.mccommand.common.AbstractCommand;
 import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
-import com.github.siroshun09.mccommand.common.sender.Sender;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,16 +25,14 @@ public class ReceiveCommand extends AbstractCommand {
 
     @Override
     public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
-        Sender sender = context.getSender();
+        CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
             return CommandResult.NO_PERMISSION;
         }
 
-        Player target = plugin.getServer().getPlayer(sender.getUUID());
-
-        if (target != null) {
+        if (sender instanceof Player target) {
             plugin.getProcessors().getPlayerReceiveProcessor().tryReceive(target);
             return CommandResult.SUCCESS;
         } else {

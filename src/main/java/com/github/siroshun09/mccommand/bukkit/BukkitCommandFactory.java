@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mccommand.bukkit;
 
-import com.github.siroshun09.mccommand.bukkit.sender.BukkitSender;
 import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import com.github.siroshun09.mccommand.common.context.SimpleCommandContext;
@@ -108,7 +107,7 @@ public final class BukkitCommandFactory {
         private CommandContext createContext(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
             return SimpleCommandContext.newBuilder()
                     .setCommand(command)
-                    .setSender(new BukkitSender(sender))
+                    .setSender(sender)
                     .setArguments(args)
                     .setLabel(label)
                     .build();
