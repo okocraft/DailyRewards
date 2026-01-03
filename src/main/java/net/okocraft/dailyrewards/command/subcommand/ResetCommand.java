@@ -76,7 +76,7 @@ public class ResetCommand extends AbstractCommand {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RESET_PLAYER, sender)
                     .replace(Placeholders.PLAYER_NAME, secondArgument)
-                    .replace(Placeholders.UUID, target.getUniqueId())
+                    .replace(Placeholders.UUID, target.getUniqueId().toString())
                     .send(sender);
 
         } else {

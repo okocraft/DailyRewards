@@ -36,12 +36,12 @@ public class ReloadCommand extends AbstractCommand {
 
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_SUCCESS, sender)
-                    .replace(Placeholders.FILE_NAME, plugin.getGeneralConfig().getFilePath())
+                    .replace(Placeholders.FILE_NAME, plugin.getGeneralConfig().getFilePath().getFileName().toString())
                     .send(sender);
         } catch (Exception e) {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_FAILURE, sender)
-                    .replace(Placeholders.FILE_NAME, plugin.getGeneralConfig().getFilePath())
+                    .replace(Placeholders.FILE_NAME, plugin.getGeneralConfig().getFilePath().getFileName().toString())
                     .send(sender);
 
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_CANCELLED, sender);
@@ -54,12 +54,12 @@ public class ReloadCommand extends AbstractCommand {
 
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_SUCCESS, sender)
-                    .replace(Placeholders.FILE_NAME, plugin.getRewardConfig().getFilePath())
+                    .replace(Placeholders.FILE_NAME, plugin.getRewardConfig().getFilePath().getFileName().toString())
                     .send(sender);
         } catch (Exception e) {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_FAILURE, sender)
-                    .replace(Placeholders.FILE_NAME, plugin.getRewardConfig().getFilePath())
+                    .replace(Placeholders.FILE_NAME, plugin.getRewardConfig().getFilePath().getFileName().toString())
                     .send(sender);
 
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_CANCELLED, sender);
@@ -70,7 +70,7 @@ public class ReloadCommand extends AbstractCommand {
         plugin.getReceiveData().reload();
         plugin.getMessageBuilder()
                 .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_SUCCESS, sender)
-                .replace(Placeholders.FILE_NAME, plugin.getReceiveData().getFilePath())
+                .replace(Placeholders.FILE_NAME, plugin.getReceiveData().getFilePath().getFileName().toString())
                 .send(sender);
 
         try {

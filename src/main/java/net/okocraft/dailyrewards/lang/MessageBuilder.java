@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mcmessage.builder.PlainTextBuilder;
 import net.kyori.adventure.audience.Audience;
 import net.okocraft.dailyrewards.DailyRewards;
 import org.jetbrains.annotations.NotNull;

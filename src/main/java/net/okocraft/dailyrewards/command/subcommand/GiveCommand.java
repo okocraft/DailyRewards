@@ -71,8 +71,8 @@ public class GiveCommand extends AbstractCommand {
 
         plugin.getMessageBuilder()
                 .getMessageWithPrefix(DefaultMessage.COMMAND_GIVE_SUCCESS, sender)
-                .replace(Placeholders.PLAYER, target)
-                .replace(Placeholders.REWARD, reward)
+                .replace(Placeholders.PLAYER, target.getName())
+                .replace(Placeholders.REWARD, reward.getName())
                 .send(sender);
 
     }

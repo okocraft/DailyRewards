@@ -14,11 +14,8 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.mcmessage.builder;
+package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mcmessage.replacer.FunctionalPlaceholder;
-import com.github.siroshun09.mcmessage.replacer.Placeholder;
-import com.github.siroshun09.mcmessage.replacer.Replacer;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.jetbrains.annotations.NotNull;
@@ -44,20 +41,13 @@ public class PlainTextBuilder {
         return this;
     }
 
-    @NotNull
-    public PlainTextBuilder replace(@NotNull Replacer replacer) {
+    public @NotNull PlainTextBuilder replace(@NotNull Replacer replacer) {
         replacer.replace(builder);
         return this;
     }
 
-    @NotNull
-    public PlainTextBuilder replace(@NotNull Placeholder placeholder, @NotNull String replacement) {
-        return replace(placeholder.toReplacer(replacement));
-    }
-
-    @NotNull
-    public <T> PlainTextBuilder replace(@NotNull FunctionalPlaceholder<T> placeholder, @NotNull T value) {
-        return replace(placeholder.toReplacer(value));
+    public @NotNull PlainTextBuilder replace(@NotNull String placeholder, @NotNull String replacement) {
+        return this.replace(Replacer.create(placeholder, replacement));
     }
 
     public void send(@NotNull Audience receiver) {

@@ -77,7 +77,7 @@ public class SetCommand extends AbstractCommand {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(msg, sender)
                     .replace(Placeholders.PLAYER_NAME, Objects.requireNonNullElse(target.getName(), secondArgument))
-                    .replace(Placeholders.UUID, target.getUniqueId())
+                    .replace(Placeholders.UUID, target.getUniqueId().toString())
                     .send(sender);
 
         } else {

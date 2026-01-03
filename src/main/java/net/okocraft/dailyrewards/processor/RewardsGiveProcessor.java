@@ -1,5 +1,6 @@
 package net.okocraft.dailyrewards.processor;
 
+import net.okocraft.dailyrewards.lang.Replacer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
@@ -30,7 +31,7 @@ public class RewardsGiveProcessor {
         boolean fail = false;
 
         for (String command : reward.getCommands()) {
-            String toRun = Placeholders.PLAYER.toReplacer(target).replace(command);
+            String toRun = Replacer.create(Placeholders.PLAYER, target.getName()).replace(command);
             boolean success = plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), toRun);
 
             if (success) {

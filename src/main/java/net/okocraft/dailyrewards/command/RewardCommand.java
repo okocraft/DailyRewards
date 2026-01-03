@@ -114,7 +114,7 @@ public class RewardCommand implements BasicCommand {
     private void sendUsage(@NotNull Audience receiver) {
         plugin.getMessageBuilder()
                 .getMessage(DefaultMessage.HELP_TOP, receiver)
-                .replace(Placeholders.VERSION, plugin)
+                .replace(Placeholders.VERSION, plugin.getPluginMeta().getVersion())
                 .send(receiver);
 
         plugin.getMessageBuilder().sendMessage(DefaultMessage.HELP_EMPTY, receiver);
