@@ -90,27 +90,6 @@ class PropertiesFileLoader implements LanguageLoader {
     }
 
     @Override
-    public void save(@NotNull Iterable<? extends KeyedMessage> keyedMessages) throws IOException {
-        Objects.requireNonNull(keyedMessages);
-
-        if (!Files.exists(filePath)) {
-            Files.createDirectories(filePath.getParent());
-            Files.createFile(filePath);
-        }
-
-        try (BufferedWriter writer = Files.newBufferedWriter(filePath, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.WRITE)) {
-            StringBuilder builder = new StringBuilder();
-
-            for (KeyedMessage msg : keyedMessages) {
-                builder.setLength(0);
-                builder.append(msg.getKey()).append('=').append(msg.get());
-                writer.write(builder.toString());
-                writer.newLine();
-            }
-        }
-    }
-
-    @Override
     public @Nullable Message getMessage(@NotNull String key) {
         Objects.requireNonNull(key);
         return messages.get(key);

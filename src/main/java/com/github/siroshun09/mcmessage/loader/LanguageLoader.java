@@ -47,8 +47,6 @@ public interface LanguageLoader extends MessageHoldable {
 
     @NotNull @Unmodifiable Set<InvalidMessage> load() throws IOException;
 
-    void save(@NotNull Iterable<? extends KeyedMessage> keyedMessages) throws IOException;
-
     default @Nullable Translation toTranslation() {
         Locale locale = parseLocaleFromFileName();
         return locale != null ? toTranslation(locale) : null;
