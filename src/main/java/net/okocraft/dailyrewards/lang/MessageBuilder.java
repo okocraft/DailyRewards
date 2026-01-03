@@ -14,16 +14,12 @@ public class MessageBuilder {
     }
 
     public @NotNull PlainTextBuilder getMessage(@NotNull DefaultMessage msg, @NotNull Audience receiver) {
-        return plugin.getLanguageManager()
-                .getMessage(msg, receiver)
-                .toPlainTextBuilder();
+        return new PlainTextBuilder(plugin.getLanguageManager().getMessage(msg, receiver));
     }
 
     public @NotNull PlainTextBuilder getMessageWithPrefix(@NotNull DefaultMessage msg, @NotNull Audience receiver) {
         return getMessage(msg, receiver)
-                .addPrefix(
-                        plugin.getLanguageManager().getMessage(DefaultMessage.PREFIX, receiver)
-                );
+                .addPrefix(plugin.getLanguageManager().getMessage(DefaultMessage.PREFIX, receiver));
     }
 
     public void sendMessage(@NotNull DefaultMessage message, @NotNull Audience receiver) {

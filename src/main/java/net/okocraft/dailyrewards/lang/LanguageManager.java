@@ -1,8 +1,6 @@
 package net.okocraft.dailyrewards.lang;
 
 import com.github.siroshun09.mcmessage.loader.LanguageLoader;
-import com.github.siroshun09.mcmessage.message.KeyedMessage;
-import com.github.siroshun09.mcmessage.message.Message;
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.translation.TranslationRegistry;
 import com.github.siroshun09.mcmessage.util.InvalidMessage;
@@ -20,7 +18,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -41,8 +38,9 @@ public class LanguageManager {
     }
 
     @NotNull
-    public Message getMessage(@NotNull DefaultMessage msg, @NotNull Audience receiver) {
-        return registry.getMessage(msg, receiver.getOrDefaultFrom(Identity.LOCALE, Locale::getDefault));
+    public String getMessage(@NotNull DefaultMessage msg, @NotNull Audience receiver) {
+        String message = this.registry.getMessage(msg.getKey(), receiver.getOrDefaultFrom(Identity.LOCALE, Locale::getDefault));
+        return message != null ? message : msg.getMessage();
     }
 
     public void reload() throws IOException {
@@ -70,15 +68,18 @@ public class LanguageManager {
         } else {
             try (BufferedWriter writer = Files.newBufferedWriter(defFile, StandardCharsets.UTF_8, StandardOpenOption.CREATE)) {
                 StringBuilder builder = new StringBuilder();
-                for (KeyedMessage defMsg : DefaultMessage.values()) {
+                for (DefaultMessage defMsg : DefaultMessage.values()) {
                     builder.setLength(0);
-                    builder.append(defMsg.getKey()).append('=').append(defMsg.get());
+                    builder.append(defMsg.getKey()).append('=').append(defMsg.getMessage());
                     writer.write(builder.toString());
                     writer.newLine();
                 }
             }
 
-            return Translation.of(locale, Set.of(DefaultMessage.values()));
+            return Translation.of(
+                    locale,
+                    Stream.of(DefaultMessage.values()).collect(Collectors.toMap(DefaultMessage::getKey, DefaultMessage::getMessage))
+            );
         }
     }
 

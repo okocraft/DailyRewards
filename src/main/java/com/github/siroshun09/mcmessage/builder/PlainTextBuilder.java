@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mcmessage.builder;
 
-import com.github.siroshun09.mcmessage.message.Message;
 import com.github.siroshun09.mcmessage.replacer.FunctionalPlaceholder;
 import com.github.siroshun09.mcmessage.replacer.Placeholder;
 import com.github.siroshun09.mcmessage.replacer.Replacer;
@@ -30,9 +29,9 @@ public class PlainTextBuilder {
 
     private final StringBuilder builder;
 
-    public PlainTextBuilder(@NotNull Message original) {
+    public PlainTextBuilder(@NotNull String original) {
         Objects.requireNonNull(original);
-        this.builder = new StringBuilder(original.get());
+        this.builder = new StringBuilder(original);
     }
 
     public @NotNull PlainTextBuilder append(@NotNull String str) {
@@ -40,17 +39,9 @@ public class PlainTextBuilder {
         return this;
     }
 
-    public @NotNull PlainTextBuilder append(@NotNull Message message) {
-        return append(message.get());
-    }
-
     public @NotNull PlainTextBuilder addPrefix(@NotNull String str) {
         builder.insert(0, str);
         return this;
-    }
-
-    public @NotNull PlainTextBuilder addPrefix(@NotNull Message message) {
-        return addPrefix(message.get());
     }
 
     @NotNull

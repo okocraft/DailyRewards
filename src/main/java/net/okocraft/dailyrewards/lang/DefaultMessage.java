@@ -1,11 +1,10 @@
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mcmessage.translation.Translation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public enum DefaultMessage implements com.github.siroshun09.mcmessage.message.DefaultMessage {
+public enum DefaultMessage {
 
     PREFIX("prefix", "&8[&6DailyRewards&8]&7 "),
 
@@ -62,17 +61,15 @@ public enum DefaultMessage implements com.github.siroshun09.mcmessage.message.De
         this.def = def;
     }
 
-    @Override
     public @NotNull String getKey() {
         return key;
     }
 
-    @Override
-    public @NotNull String get() {
+    public @NotNull String getMessage() {
         return def;
     }
 
     public static Locale getDefaultLocale() {
-        return Translation.parseLocale("en_US");
+        return Locale.US;
     }
 }

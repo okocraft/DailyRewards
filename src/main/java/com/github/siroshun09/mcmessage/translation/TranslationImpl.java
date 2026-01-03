@@ -16,51 +16,24 @@
 
 package com.github.siroshun09.mcmessage.translation;
 
-import com.github.siroshun09.mcmessage.message.KeyedMessage;
-import com.github.siroshun09.mcmessage.message.Message;
-import com.github.siroshun09.mcmessage.message.TranslatedMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class TranslationImpl implements Translation {
 
     private final Locale locale;
-    private final Map<String, TranslatedMessage> messages;
+    private final Map<String, String> messages;
 
-    TranslationImpl(@NotNull Locale locale, @NotNull Iterable<? extends KeyedMessage> messages) {
+    TranslationImpl(@NotNull Locale locale, @NotNull Map<String, String> messages) {
         Objects.requireNonNull(locale);
         Objects.requireNonNull(messages);
 
         this.locale = locale;
-        this.messages =
-                StreamSupport.stream(messages.spliterator(), false)
-                        .collect(Collectors.toMap(
-                                KeyedMessage::getKey,
-                                m -> TranslatedMessage.of(m, locale))
-                        );
-    }
-
-    TranslationImpl(@NotNull Locale locale, @NotNull Map<String, ? extends Message> messages) {
-        Objects.requireNonNull(locale);
-        Objects.requireNonNull(messages);
-
-        this.locale = locale;
-        this.messages =
-                messages.entrySet().stream()
-                        .filter(e -> Objects.nonNull(e.getKey()))
-                        .filter(e -> Objects.nonNull(e.getValue()))
-                        .collect(Collectors.toMap(
-                                Map.Entry::getKey,
-                                e -> TranslatedMessage.of(e.getValue(), locale)
-                        ));
+        this.messages = Map.copyOf(messages);
     }
 
     @Override
@@ -69,41 +42,8 @@ public class TranslationImpl implements Translation {
     }
 
     @Override
-    public @Nullable TranslatedMessage getMessage(@NotNull String key) {
+    public @Nullable String getMessage(@NotNull String key) {
         Objects.requireNonNull(key);
         return messages.get(key);
-    }
-
-    public @NotNull @Unmodifiable Set<KeyedMessage> getMessages() {
-        return messages.entrySet().stream()
-                .map(entry -> KeyedMessage.of(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toUnmodifiableSet());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o instanceof TranslationImpl that) {
-            return getLocale().equals(that.getLocale()) &&
-                    getMessages().equals(that.getMessages());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getLocale(), getMessages());
-    }
-
-    @Override
-    public String toString() {
-        return "TranslationImpl{" +
-                "locale=" + locale +
-                ", messages=" + messages +
-                '}';
     }
 }

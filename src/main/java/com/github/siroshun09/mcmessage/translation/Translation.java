@@ -16,9 +16,6 @@
 
 package com.github.siroshun09.mcmessage.translation;
 
-import com.github.siroshun09.mcmessage.message.KeyedMessage;
-import com.github.siroshun09.mcmessage.message.Message;
-import com.github.siroshun09.mcmessage.message.TranslatedMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,11 +24,7 @@ import java.util.Map;
 
 public interface Translation {
 
-    static @NotNull Translation of(@NotNull Locale locale, @NotNull Iterable<? extends KeyedMessage> messages) {
-        return new TranslationImpl(locale, messages);
-    }
-
-    static @NotNull Translation of(@NotNull Locale locale, @NotNull Map<String, ? extends Message> messages) {
+    static @NotNull Translation of(@NotNull Locale locale, @NotNull Map<String, String> messages) {
         return new TranslationImpl(locale, messages);
     }
 
@@ -58,7 +51,7 @@ public interface Translation {
         return null;
     }
 
-    @Nullable TranslatedMessage getMessage(@NotNull String key);
+    @Nullable String getMessage(@NotNull String key);
 
     @NotNull Locale getLocale();
 }

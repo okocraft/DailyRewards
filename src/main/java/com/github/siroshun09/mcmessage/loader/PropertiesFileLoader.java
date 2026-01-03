@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mcmessage.loader;
 
-import com.github.siroshun09.mcmessage.message.Message;
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.util.InvalidMessage;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +38,7 @@ import java.util.Set;
 class PropertiesFileLoader implements LanguageLoader {
 
     private final Path filePath;
-    private final Map<String, Message> messages;
+    private final Map<String, String> messages;
 
     PropertiesFileLoader(@NotNull Path filePath) {
         this.filePath = filePath;
@@ -77,7 +76,7 @@ class PropertiesFileLoader implements LanguageLoader {
                 if (messages.containsKey(key)) {
                     invalidMessages.add(new InvalidMessage(currentLine, line, InvalidMessage.Reason.DUPLICATE_KEY));
                 } else {
-                    messages.put(key, Message.of(split[1]));
+                    messages.put(key, split[1]);
                 }
             }
         }
