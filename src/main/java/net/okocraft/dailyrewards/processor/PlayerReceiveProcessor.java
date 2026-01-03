@@ -56,14 +56,12 @@ public class PlayerReceiveProcessor {
                 plugin.getGeneralConfig().getReceiveSoundPitch()
         );
 
-        plugin.getServer().getScheduler().runTask(
-                plugin,
-                () -> plugin.getProcessors()
-                        .getRewardsGiveProcessor()
-                        .give(receiver)
-        );
+        plugin.getProcessors().getRewardsGiveProcessor().give(receiver);
 
-        plugin.getReceiveData().saveAsync();
+        this.plugin.getServer().getAsyncScheduler().runNow(
+                this.plugin,
+                ignored -> this.plugin.getReceiveData().save(this.plugin.getSLF4JLogger())
+        );
     }
 
     private void playSound(@NotNull Player player, @NotNull Sound sound, float volume, float pitch) {

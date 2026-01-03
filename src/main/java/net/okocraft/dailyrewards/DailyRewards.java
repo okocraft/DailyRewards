@@ -9,7 +9,6 @@ import net.okocraft.dailyrewards.lang.LanguageManager;
 import net.okocraft.dailyrewards.lang.MessageBuilder;
 import net.okocraft.dailyrewards.listener.PlayerJoinListener;
 import net.okocraft.dailyrewards.processor.Processors;
-import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -18,9 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.logging.Level;
 
 public class DailyRewards extends JavaPlugin {
 
@@ -30,7 +26,6 @@ public class DailyRewards extends JavaPlugin {
     private RewardConfig rewardConfig;
     private ReceiveData receiveData;
     private Processors processors;
-    private ScheduledExecutorService scheduler;
 
     private PlayerJoinListener playerJoinListener;
 
@@ -57,7 +52,6 @@ public class DailyRewards extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        scheduler = Executors.newSingleThreadScheduledExecutor();
         processors = new Processors(this);
 
         this.getLifecycleManager().registerEventHandler(
@@ -77,15 +71,7 @@ public class DailyRewards extends JavaPlugin {
             playerJoinListener.shutdown();
         }
 
-        HandlerList.unregisterAll(this);
-        scheduler.shutdownNow();
-        getServer().getScheduler().cancelTasks(this);
-
-        try {
-            receiveData.close();
-        } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Could not close receive data.", e);
-        }
+        receiveData.save(this.getSLF4JLogger());
     }
 
     public GeneralConfig getGeneralConfig() {
@@ -112,7 +98,4 @@ public class DailyRewards extends JavaPlugin {
         return processors;
     }
 
-    public ScheduledExecutorService getScheduler() {
-        return scheduler;
-    }
 }

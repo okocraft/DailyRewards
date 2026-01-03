@@ -16,7 +16,10 @@ public class PlayerCheckProcessor {
     public Result check(@NotNull Player target) {
         if (plugin.getReceiveData().isNotToday()) {
             plugin.getReceiveData().reset();
-            plugin.getReceiveData().saveAsync();
+            this.plugin.getServer().getAsyncScheduler().runNow(
+                    this.plugin,
+                    ignored -> this.plugin.getReceiveData().save(this.plugin.getSLF4JLogger())
+            );
         }
 
         if (plugin.getReceiveData().isReceived(target.getUniqueId())) {

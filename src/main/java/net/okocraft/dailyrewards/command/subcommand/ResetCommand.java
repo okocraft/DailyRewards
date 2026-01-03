@@ -49,7 +49,10 @@ public class ResetCommand extends AbstractCommand {
 
         if (secondArgument.get().equalsIgnoreCase("all")) {
             if (plugin.getReceiveData().reset()) {
-                plugin.getReceiveData().saveAsync();
+                this.plugin.getServer().getAsyncScheduler().runNow(
+                        this.plugin,
+                        ignored -> this.plugin.getReceiveData().save(this.plugin.getSLF4JLogger())
+                );
                 plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RESET_ALL, sender);
                 return;
             } else {
@@ -80,7 +83,10 @@ public class ResetCommand extends AbstractCommand {
 
         boolean changed = plugin.getReceiveData().setReceived(target.getUniqueId(), false);
 
-        plugin.getReceiveData().saveAsync();
+        this.plugin.getServer().getAsyncScheduler().runNow(
+                this.plugin,
+                ignored -> this.plugin.getReceiveData().save(this.plugin.getSLF4JLogger())
+        );
 
         if (changed) {
             plugin.getMessageBuilder()

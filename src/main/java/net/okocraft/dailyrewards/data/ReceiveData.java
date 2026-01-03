@@ -3,8 +3,8 @@ package net.okocraft.dailyrewards.data;
 import net.okocraft.dailyrewards.DailyRewards;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,42 +13,22 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
-public class ReceiveData implements Closeable {
+public class ReceiveData {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final String FILE_NAME = "data.yml";
 
-    private final DailyRewards plugin;
     private final Path filePath;
     private final Set<UUID> receivedPlayers = new HashSet<>();
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private LocalDate date = LocalDate.now();
 
     public ReceiveData(@NotNull DailyRewards plugin) {
-        this.plugin = plugin;
         this.filePath = plugin.getDataFolder().toPath().resolve(FILE_NAME);
 
         if (Files.exists(this.filePath)) {
             this.reload();
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        executor.shutdown();
-
-        try {
-            executor.awaitTermination(5, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            plugin.getLogger().log(Level.SEVERE, "", e);
-        }
-
-        save();
     }
 
     public @NotNull Path getFilePath() {
@@ -95,17 +75,7 @@ public class ReceiveData implements Closeable {
         yaml.getStringList(DATE_TIME_FORMATTER.format(date)).forEach(this::addUuidOrIgnore);
     }
 
-    public void saveAsync() {
-        executor.execute(() -> {
-            try {
-                save();
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.SEVERE, "Could not save data.", e);
-            }
-        });
-    }
-
-    public void save() throws IOException {
+    public void save(Logger logger) {
         YamlConfiguration yaml = new YamlConfiguration();
 
         yaml.set(
@@ -113,7 +83,11 @@ public class ReceiveData implements Closeable {
                 receivedPlayers.stream().map(UUID::toString).toList()
         );
 
-        yaml.save(this.filePath.toFile());
+        try {
+            yaml.save(this.filePath.toFile());
+        } catch (IOException e) {
+            logger.error("Could not save data.", e);
+        }
     }
 
     private void addUuidOrIgnore(@NotNull String str) {

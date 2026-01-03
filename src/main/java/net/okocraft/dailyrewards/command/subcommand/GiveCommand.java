@@ -71,11 +71,11 @@ public class GiveCommand extends AbstractCommand {
             return;
         }
 
-        plugin.getServer().getScheduler()
-                .runTask(
-                        plugin,
-                        () -> plugin.getProcessors().getRewardsGiveProcessor().give(target, reward)
-                );
+        target.getScheduler().run(
+                this.plugin,
+                ignored -> plugin.getProcessors().getRewardsGiveProcessor().give(target, reward),
+                null
+        );
 
         plugin.getMessageBuilder()
                 .getMessageWithPrefix(DefaultMessage.COMMAND_GIVE_SUCCESS, sender)

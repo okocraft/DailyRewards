@@ -1,5 +1,6 @@
 package net.okocraft.dailyrewards.listener;
 
+import io.papermc.paper.util.Tick;
 import net.okocraft.dailyrewards.DailyRewards;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -7,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
 
 public class PlayerJoinListener implements Listener {
 
@@ -29,14 +30,15 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(@NotNull PlayerJoinEvent event) {
-        plugin.getScheduler().schedule(
-                () -> {
+        event.getPlayer().getScheduler().runDelayed(
+                this.plugin,
+                ignored -> {
                     if (event.getPlayer().hasPermission(AUTO_RECEIVE_PERMISSION)) {
                         plugin.getProcessors().getPlayerReceiveProcessor().tryReceive(event.getPlayer());
                     }
                 },
-                plugin.getGeneralConfig().getAutoReceiveDelay(),
-                TimeUnit.SECONDS
+                null,
+                Tick.tick().fromDuration(Duration.ofSeconds(plugin.getGeneralConfig().getAutoReceiveDelay()))
         );
     }
 }

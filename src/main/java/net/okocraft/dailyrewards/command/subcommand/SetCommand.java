@@ -83,7 +83,10 @@ public class SetCommand extends AbstractCommand {
 
         boolean changed = plugin.getReceiveData().setReceived(target.getUniqueId(), bool);
 
-        plugin.getReceiveData().saveAsync();
+        this.plugin.getServer().getAsyncScheduler().runNow(
+                this.plugin,
+                ignored -> this.plugin.getReceiveData().save(this.plugin.getSLF4JLogger())
+        );
 
         if (changed) {
             DefaultMessage msg = bool ? DefaultMessage.COMMAND_SET_TRUE : DefaultMessage.COMMAND_SET_FALSE;
