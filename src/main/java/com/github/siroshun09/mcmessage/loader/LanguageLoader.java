@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mcmessage.loader;
 
-import com.github.siroshun09.mcmessage.MessageHoldable;
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.util.InvalidMessage;
 import org.jetbrains.annotations.Contract;
@@ -31,7 +30,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
-public interface LanguageLoader extends MessageHoldable {
+public interface LanguageLoader {
 
     @Contract("_ -> new")
     static @NotNull LanguageLoader fromPropertiesFile(@NotNull Path filePath) {

@@ -74,7 +74,6 @@ public class TranslationImpl implements Translation {
         return messages.get(key);
     }
 
-    @Override
     public @NotNull @Unmodifiable Set<KeyedMessage> getMessages() {
         return messages.entrySet().stream()
                 .map(entry -> KeyedMessage.of(entry.getKey(), entry.getValue()))
@@ -87,8 +86,7 @@ public class TranslationImpl implements Translation {
             return true;
         }
 
-        if (o instanceof Translation) {
-            Translation that = (Translation) o;
+        if (o instanceof TranslationImpl that) {
             return getLocale().equals(that.getLocale()) &&
                     getMessages().equals(that.getMessages());
         } else {

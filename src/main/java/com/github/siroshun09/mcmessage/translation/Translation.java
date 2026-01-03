@@ -16,8 +16,6 @@
 
 package com.github.siroshun09.mcmessage.translation;
 
-import com.github.siroshun09.mcmessage.MessageHoldable;
-import com.github.siroshun09.mcmessage.message.DefaultMessage;
 import com.github.siroshun09.mcmessage.message.KeyedMessage;
 import com.github.siroshun09.mcmessage.message.Message;
 import com.github.siroshun09.mcmessage.message.TranslatedMessage;
@@ -26,9 +24,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
-public interface Translation extends MessageHoldable {
+public interface Translation {
 
     static @NotNull Translation of(@NotNull Locale locale, @NotNull Iterable<? extends KeyedMessage> messages) {
         return new TranslationImpl(locale, messages);
@@ -61,20 +58,7 @@ public interface Translation extends MessageHoldable {
         return null;
     }
 
-    @Override
     @Nullable TranslatedMessage getMessage(@NotNull String key);
-
-    @Override
-    default @NotNull TranslatedMessage getMessage(@NotNull String key, @NotNull String def) {
-        var message = getMessage(key);
-        return message != null ? message : TranslatedMessage.of(def, getLocale());
-    }
-
-    @Override
-    default @NotNull TranslatedMessage getMessage(@NotNull DefaultMessage defaultMessage) {
-        Objects.requireNonNull(defaultMessage);
-        return getMessage(defaultMessage.getKey(), defaultMessage.getDefault());
-    }
 
     @NotNull Locale getLocale();
 }

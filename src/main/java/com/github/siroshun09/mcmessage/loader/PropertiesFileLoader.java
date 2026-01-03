@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mcmessage.loader;
 
-import com.github.siroshun09.mcmessage.message.KeyedMessage;
 import com.github.siroshun09.mcmessage.message.Message;
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.util.InvalidMessage;
@@ -36,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 class PropertiesFileLoader implements LanguageLoader {
 
@@ -85,19 +83,6 @@ class PropertiesFileLoader implements LanguageLoader {
         }
 
         return Collections.unmodifiableSet(invalidMessages);
-    }
-
-    @Override
-    public @Nullable Message getMessage(@NotNull String key) {
-        Objects.requireNonNull(key);
-        return messages.get(key);
-    }
-
-    @Override
-    public @NotNull @Unmodifiable Set<KeyedMessage> getMessages() {
-        return messages.entrySet().stream()
-                .map(entry -> KeyedMessage.of(entry.getKey(), entry.getValue().get()))
-                .collect(Collectors.toUnmodifiableSet());
     }
 
     @Override
