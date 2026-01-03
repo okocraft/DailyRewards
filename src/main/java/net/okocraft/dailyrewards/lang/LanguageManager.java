@@ -1,9 +1,7 @@
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mcmessage.loader.LanguageLoader;
 import com.github.siroshun09.mcmessage.translation.Translation;
 import com.github.siroshun09.mcmessage.translation.TranslationRegistry;
-import com.github.siroshun09.mcmessage.util.InvalidMessage;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.okocraft.dailyrewards.DailyRewards;
@@ -91,20 +89,20 @@ public class LanguageManager {
                     .filter(p -> !p.getFileName().toString().equals(DefaultMessage.getDefaultLocale().toString() + FILE_EXTENSION))
                     .map(this::getLoadedLanguageFileUnsafe)
                     .filter(Objects::nonNull)
-                    .map(LanguageLoader::toTranslation)
+                    .map(PropertiesFileLoader::toTranslation)
                     .filter(Objects::nonNull)
                     .forEach(registry::register);
         }
     }
 
-    private LanguageLoader getLoadedLanguageFile(@NotNull Path path) throws IOException {
-        LanguageLoader loader = LanguageLoader.fromPropertiesFile(path);
-        loader.load().forEach(this::printInvalidMessage);
+    private PropertiesFileLoader getLoadedLanguageFile(@NotNull Path path) throws IOException {
+        PropertiesFileLoader loader = new PropertiesFileLoader(path);
+        new PropertiesFileLoader(path).load().forEach(this::printInvalidMessage);
         return loader;
     }
 
     @Nullable
-    private LanguageLoader getLoadedLanguageFileUnsafe(@NotNull Path path) {
+    private PropertiesFileLoader getLoadedLanguageFileUnsafe(@NotNull Path path) {
         try {
             return getLoadedLanguageFile(path);
         } catch (IOException e) {
@@ -114,6 +112,6 @@ public class LanguageManager {
     }
 
     private void printInvalidMessage(@NotNull InvalidMessage invalid) {
-        plugin.getLogger().warning("Invalid message: " + invalid.toString());
+        plugin.getLogger().warning("Invalid message: " + invalid);
     }
 }

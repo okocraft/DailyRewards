@@ -14,7 +14,7 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.mcmessage.util;
+package net.okocraft.dailyrewards.lang;
 
 import org.jetbrains.annotations.NotNull;
 

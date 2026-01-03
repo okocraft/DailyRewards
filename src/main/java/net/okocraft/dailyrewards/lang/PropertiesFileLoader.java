@@ -14,10 +14,9 @@
  *     limitations under the License.
  */
 
-package com.github.siroshun09.mcmessage.loader;
+package net.okocraft.dailyrewards.lang;
 
 import com.github.siroshun09.mcmessage.translation.Translation;
-import com.github.siroshun09.mcmessage.util.InvalidMessage;
 import net.kyori.adventure.translation.Translator;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,20 +32,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
-class PropertiesFileLoader implements LanguageLoader {
+public class PropertiesFileLoader {
 
     private final Path filePath;
     private final Map<String, String> messages;
 
-    PropertiesFileLoader(@NotNull Path filePath) {
+    public PropertiesFileLoader(@NotNull Path filePath) {
         this.filePath = filePath;
         this.messages = new HashMap<>();
     }
 
-    @Override
     public @NotNull @Unmodifiable Set<InvalidMessage> load() throws IOException {
         if (!Files.exists(filePath)) {
             return Collections.emptySet();
@@ -85,43 +82,17 @@ class PropertiesFileLoader implements LanguageLoader {
         return Collections.unmodifiableSet(invalidMessages);
     }
 
-    @Override
     public @NotNull Translation toTranslation(@NotNull Locale locale) {
         return Translation.of(locale, messages);
     }
 
-    @Override
+    public @Nullable Translation toTranslation() {
+        Locale locale = parseLocaleFromFileName();
+        return locale != null ? toTranslation(locale) : null;
+    }
+
     public @Nullable Locale parseLocaleFromFileName() {
         String fileName = filePath.getFileName().toString();
         return Translator.parseLocale(fileName.substring(0, fileName.length() - 11)); // .properties
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o instanceof PropertiesFileLoader) {
-            PropertiesFileLoader that = (PropertiesFileLoader) o;
-            return filePath.equals(that.filePath) &&
-                    messages.equals(that.messages);
-
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(filePath, messages);
-    }
-
-    @Override
-    public String toString() {
-        return "PropertiesFileLoader{" +
-                "filePath=" + filePath +
-                ", messages=" + messages +
-                '}';
     }
 }
