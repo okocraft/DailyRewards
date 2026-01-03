@@ -1,11 +1,10 @@
 package net.okocraft.dailyrewards.command;
 
-import com.github.siroshun09.mccommand.common.Command;
-import com.github.siroshun09.mccommand.common.SubCommandHolder;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.audience.Audience;
 import net.okocraft.dailyrewards.DailyRewards;
+import net.okocraft.dailyrewards.command.subcommand.Command;
 import net.okocraft.dailyrewards.command.subcommand.GiveCommand;
 import net.okocraft.dailyrewards.command.subcommand.ReceiveCommand;
 import net.okocraft.dailyrewards.command.subcommand.ReloadCommand;
@@ -16,12 +15,15 @@ import net.okocraft.dailyrewards.lang.Placeholders;
 import org.bukkit.command.CommandSender;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RewardCommand implements BasicCommand {
@@ -33,26 +35,33 @@ public class RewardCommand implements BasicCommand {
             );
 
     private final DailyRewards plugin;
-    private final SubCommandHolder subCommandHolder;
+    private final List<Command> subCommands;
+    private final Map<String, Command> subCommandMap;
 
     public RewardCommand(@NotNull DailyRewards plugin) {
         this.plugin = plugin;
-        this.subCommandHolder =
-                SubCommandHolder.of(
-                        new GiveCommand(plugin),
-                        new ReceiveCommand(plugin),
-                        new ReloadCommand(plugin),
-                        new ResetCommand(plugin),
-                        new SetCommand(plugin)
-                );
+        this.subCommands = List.of(
+                new GiveCommand(plugin),
+                new ReceiveCommand(plugin),
+                new ReloadCommand(plugin),
+                new ResetCommand(plugin),
+                new SetCommand(plugin)
+        );
+
+        Map<String, Command> subCommandMap = new HashMap<>();
+        for (Command subCommand : this.subCommands) {
+            subCommandMap.put(subCommand.getName(), subCommand);
+            for (String alias : subCommand.getAliases()) {
+                subCommandMap.put(alias, subCommand);
+            }
+        }
+
+        this.subCommandMap = Collections.unmodifiableMap(subCommandMap);
     }
 
     public void onExecution(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(this.permission())) {
-            plugin.getMessageBuilder()
-                    .getMessageWithPrefix(DefaultMessage.ERROR_NO_PERMISSION, sender)
-                    .replace(Placeholders.COMMAND_PERM, this.permission())
-                    .send(sender);
+            plugin.getMessageBuilder().sendNoPermission(sender, this.permission());
             return;
         }
 
@@ -61,16 +70,14 @@ public class RewardCommand implements BasicCommand {
             return;
         }
 
-        String firstArgument = args.getFirst();
-        Optional<Command> subCommand = subCommandHolder.searchOptional(firstArgument);
-
-        if (subCommand.isPresent()) {
-            subCommand.get().onExecution(sender, args);
+        Command subCommand = this.findSubCommand(args.getFirst());
+        if (subCommand != null) {
+            subCommand.onExecution(sender, args);
         } else {
-            if (!firstArgument.equalsIgnoreCase("help")) {
+            if (!args.getFirst().equalsIgnoreCase("help")) {
                 plugin.getMessageBuilder()
                         .getMessageWithPrefix(DefaultMessage.ERROR_INVALID_ARGUMENT, sender)
-                        .replace(Placeholders.ARG, firstArgument)
+                        .replace(Placeholders.ARG, args.getFirst())
                         .send(sender);
             }
             sendUsage(sender);
@@ -87,18 +94,21 @@ public class RewardCommand implements BasicCommand {
         if (args.size() == 1) {
             return StringUtil.copyPartialMatches(
                     firstArgument,
-                    subCommandHolder.getSubCommands()
-                            .stream()
+                    this.subCommands.stream()
                             .filter(c -> sender.hasPermission(c.getPermission()))
                             .map(Command::getName)
                             .collect(Collectors.toList()),
                     new ArrayList<>());
         } else {
-            return subCommandHolder
-                    .searchOptional(firstArgument)
-                    .map(cmd -> cmd.onTabCompletion(sender, args))
-                    .orElse(Collections.emptyList());
+            Command subCommand = this.findSubCommand(args.getFirst());
+            return subCommand != null ?
+                    subCommand.onTabCompletion(sender, args) :
+                    Collections.emptyList();
         }
+    }
+
+    private @Nullable Command findSubCommand(@NotNull String name) {
+        return this.subCommandMap.get(name.toLowerCase(Locale.ENGLISH));
     }
 
     private void sendUsage(@NotNull Audience receiver) {

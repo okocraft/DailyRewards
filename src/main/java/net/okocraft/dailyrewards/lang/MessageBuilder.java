@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards.lang;
 
-import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mcmessage.builder.PlainTextBuilder;
 import net.kyori.adventure.audience.Audience;
 import net.okocraft.dailyrewards.DailyRewards;
@@ -35,9 +34,9 @@ public class MessageBuilder {
         getMessageWithPrefix(message, receiver).send(receiver);
     }
 
-    public void sendNoPermission(@NotNull Audience receiver, @NotNull Command command) {
+    public void sendNoPermission(@NotNull Audience receiver, @NotNull String commandName) {
         getMessageWithPrefix(DefaultMessage.ERROR_NO_PERMISSION, receiver)
-                .replace(Placeholders.COMMAND_PERM, command.getName())
+                .replace(Placeholders.COMMAND_PERM, commandName)
                 .send(receiver);
     }
 }

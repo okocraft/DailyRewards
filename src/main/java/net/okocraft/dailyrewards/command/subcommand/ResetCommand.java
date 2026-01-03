@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
-import com.github.siroshun09.mccommand.common.AbstractCommand;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import net.okocraft.dailyrewards.lang.Placeholders;
@@ -30,7 +29,7 @@ public class ResetCommand extends AbstractCommand {
     @Override
     public void onExecution(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(getPermission())) {
-            plugin.getMessageBuilder().sendNoPermission(sender, this);
+            plugin.getMessageBuilder().sendNoPermission(sender, this.getPermission());
             return;
         }
 

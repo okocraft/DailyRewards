@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
-import com.github.siroshun09.mccommand.common.AbstractCommand;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import net.okocraft.dailyrewards.lang.Placeholders;
@@ -10,13 +9,14 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ReloadCommand extends AbstractCommand {
 
     private final DailyRewards plugin;
 
     public ReloadCommand(@NotNull DailyRewards plugin) {
-        super("reload", "dailyrewards.command.reload");
+        super("reload", "dailyrewards.command.reload", Set.of());
 
         this.plugin = plugin;
     }
@@ -25,7 +25,7 @@ public class ReloadCommand extends AbstractCommand {
     @Override
     public void onExecution(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(getPermission())) {
-            plugin.getMessageBuilder().sendNoPermission(sender, this);
+            plugin.getMessageBuilder().sendNoPermission(sender, this.getPermission());
             return;
         }
 
