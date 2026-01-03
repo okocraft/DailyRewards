@@ -1,38 +1,31 @@
 package net.okocraft.dailyrewards.config;
 
-import com.github.siroshun09.configapi.yaml.YamlConfiguration;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.reward.Reward;
 import net.okocraft.dailyrewards.reward.RewardLoader;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
 public class RewardConfig {
 
+    private final Path filepath;
     private final YamlConfiguration yaml;
     private final List<Reward> rewards;
 
     public RewardConfig(@NotNull DailyRewards plugin) {
-        this.yaml = YamlConfiguration.create(plugin.getDataFolder().toPath().resolve("rewards.yml"));
-
-        try (yaml) {
-            yaml.load();
-            this.rewards = RewardLoader.load(yaml);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load rewards.yml", e);
-        }
+        this.filepath = plugin.getDataFolder().toPath().resolve("rewards.yml");
+        this.yaml = YamlConfiguration.loadConfiguration(this.filepath.toFile());
+        this.rewards = RewardLoader.load(this.yaml);
     }
 
-    public void reload() throws IOException {
+    public void reload() throws Exception {
         rewards.clear();
 
-        try (yaml) {
-            yaml.load();
-            rewards.addAll(RewardLoader.load(yaml));
-        }
+        yaml.load(this.filepath.toFile());
+        rewards.addAll(RewardLoader.load(yaml));
     }
 
     @NotNull
@@ -41,6 +34,6 @@ public class RewardConfig {
     }
 
     public @NotNull Path getFilePath() {
-        return yaml.getPath();
+        return this.filepath;
     }
 }

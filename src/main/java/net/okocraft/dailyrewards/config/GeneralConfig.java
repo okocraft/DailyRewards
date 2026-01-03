@@ -1,36 +1,32 @@
 package net.okocraft.dailyrewards.config;
 
-import com.github.siroshun09.configapi.yaml.YamlConfiguration;
 import net.okocraft.dailyrewards.DailyRewards;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Locale;
 
 public class GeneralConfig {
 
+    private final Path filepath;
     private final YamlConfiguration yaml;
 
     private Sound receiveSound;
     private Sound cannotReceiveSound;
 
     public GeneralConfig(@NotNull DailyRewards plugin) {
-        this.yaml = YamlConfiguration.create(plugin.getDataFolder().toPath().resolve("config.yml"));
-
-        try (yaml) {
-            yaml.load();
-            setSounds();
-        } catch (IOException e) {
-            throw new RuntimeException("Could not load config.yml", e);
-        }
+        this.filepath = plugin.getDataFolder().toPath().resolve("config.yml");
+        this.yaml = YamlConfiguration.loadConfiguration(this.filepath.toFile());
+        setSounds();
     }
 
-    public void reload() throws IOException {
-        try (yaml) {
-            yaml.load();
-            setSounds();
-        }
+    public void reload() throws Exception {
+        yaml.load(this.filepath.toFile());
+        setSounds();
     }
 
     public boolean isAutoReceiveEnabled() {
@@ -76,25 +72,39 @@ public class GeneralConfig {
     }
 
     public @NotNull Path getFilePath() {
-        return yaml.getPath();
+        return this.filepath;
     }
 
     private void setSounds() {
-        try {
-            receiveSound = Sound.valueOf(yaml.getString("sound.receive.sound", "ENTITY_PLAYER_LEVELUP"));
-        } catch (IllegalArgumentException e) {
-            receiveSound = Sound.ENTITY_PLAYER_LEVELUP;
-        }
-
-        try {
-            cannotReceiveSound = Sound.valueOf(yaml.getString("sound.cannot-receive.sount", "BLOCK_ANVIL_PLACE"));
-        } catch (IllegalArgumentException e) {
-            cannotReceiveSound = Sound.BLOCK_ANVIL_PLACE;
-        }
+        this.receiveSound = this.getSound("sound.receive.sound", Sound.ENTITY_PLAYER_LEVELUP);
+        this.cannotReceiveSound = this.getSound("sound.cannot-receive.sound", Sound.BLOCK_ANVIL_PLACE);
     }
 
     private float getFloat(@NotNull String path, float def, float min, float max) {
         float value = (float) yaml.getDouble(path, def);
         return min <= value && value <= max ? value : def;
+    }
+
+    private @NotNull Sound getSound(@NotNull String path, @NotNull Sound def) {
+        String value = this.yaml.getString(path);
+        if (value == null || value.isEmpty()) {
+            return def;
+        }
+
+        NamespacedKey key;
+        if (value.contains(":") || value.contains(".")) { // namespaced key
+            key = NamespacedKey.fromString(value);
+            if (key == null) {
+                return def;
+            }
+        } else { // enum name (for backward compatibility)
+            key = NamespacedKey.minecraft(value.replace("_", ".").toLowerCase(Locale.ENGLISH));
+        }
+
+        try {
+            return Registry.SOUNDS.getOrThrow(key);
+        } catch (IllegalArgumentException e) {
+            return def;
+        }
     }
 }

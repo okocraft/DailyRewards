@@ -27,6 +27,7 @@ import java.util.stream.Stream;
 public class LanguageManager {
 
     private static final String FILE_EXTENSION = ".properties";
+    public static final String JA_JP_FILENAME = "ja_JP.properties";
 
     private final DailyRewards plugin;
     private final Path directory;

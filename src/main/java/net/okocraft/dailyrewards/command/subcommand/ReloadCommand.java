@@ -42,7 +42,7 @@ public class ReloadCommand extends AbstractCommand {
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_SUCCESS, sender)
                     .replace(Placeholders.FILE_NAME, plugin.getGeneralConfig().getFilePath())
                     .send(sender);
-        } catch (IOException e) {
+        } catch (Exception e) {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_FAILURE, sender)
                     .replace(Placeholders.FILE_NAME, plugin.getGeneralConfig().getFilePath())
@@ -60,7 +60,7 @@ public class ReloadCommand extends AbstractCommand {
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_SUCCESS, sender)
                     .replace(Placeholders.FILE_NAME, plugin.getRewardConfig().getFilePath())
                     .send(sender);
-        } catch (IOException e) {
+        } catch (Exception e) {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_FAILURE, sender)
                     .replace(Placeholders.FILE_NAME, plugin.getRewardConfig().getFilePath())
@@ -71,23 +71,11 @@ public class ReloadCommand extends AbstractCommand {
             return CommandResult.EXCEPTION_OCCURRED;
         }
 
-        try {
-            plugin.getReceiveData().reload();
-
-            plugin.getMessageBuilder()
-                    .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_SUCCESS, sender)
-                    .replace(Placeholders.FILE_NAME, plugin.getReceiveData().getFilePath())
-                    .send(sender);
-        } catch (IOException e) {
-            plugin.getMessageBuilder()
-                    .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_FAILURE, sender)
-                    .replace(Placeholders.FILE_NAME, plugin.getReceiveData().getFilePath())
-                    .send(sender);
-
-            plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_CANCELLED, sender);
-
-            return CommandResult.EXCEPTION_OCCURRED;
-        }
+        plugin.getReceiveData().reload();
+        plugin.getMessageBuilder()
+                .getMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_SUCCESS, sender)
+                .replace(Placeholders.FILE_NAME, plugin.getReceiveData().getFilePath())
+                .send(sender);
 
         try {
             plugin.getLanguageManager().reload();

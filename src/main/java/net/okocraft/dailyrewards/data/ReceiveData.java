@@ -1,7 +1,7 @@
 package net.okocraft.dailyrewards.data;
 
-import com.github.siroshun09.configapi.yaml.YamlConfiguration;
 import net.okocraft.dailyrewards.DailyRewards;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
@@ -17,7 +17,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 public class ReceiveData implements Closeable {
 
@@ -34,12 +33,8 @@ public class ReceiveData implements Closeable {
         this.plugin = plugin;
         this.filePath = plugin.getDataFolder().toPath().resolve(FILE_NAME);
 
-        if (Files.exists(filePath)) {
-            try {
-                reload();
-            } catch (IOException e) {
-                plugin.getLogger().log(Level.WARNING, "Could not load data.", e);
-            }
+        if (Files.exists(this.filePath)) {
+            this.reload();
         }
     }
 
@@ -89,19 +84,15 @@ public class ReceiveData implements Closeable {
         return hasElement;
     }
 
-    public void reload() throws IOException {
+    public void reload() {
         reset();
 
         if (!Files.exists(filePath)) {
             return;
         }
 
-        var yaml = YamlConfiguration.create(filePath);
-
-        yaml.load();
-
-        yaml.getStringList(DATE_TIME_FORMATTER.format(date))
-                .forEach(this::addUuidOrIgnore);
+        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(this.filePath.toFile());
+        yaml.getStringList(DATE_TIME_FORMATTER.format(date)).forEach(this::addUuidOrIgnore);
     }
 
     public void saveAsync() {
@@ -115,17 +106,14 @@ public class ReceiveData implements Closeable {
     }
 
     public void save() throws IOException {
-        var yaml = YamlConfiguration.create(filePath);
+        YamlConfiguration yaml = new YamlConfiguration();
 
         yaml.set(
                 DATE_TIME_FORMATTER.format(date),
-                receivedPlayers
-                        .stream()
-                        .map(UUID::toString)
-                        .collect(Collectors.toUnmodifiableList())
+                receivedPlayers.stream().map(UUID::toString).toList()
         );
 
-        yaml.save();
+        yaml.save(this.filePath.toFile());
     }
 
     private void addUuidOrIgnore(@NotNull String str) {

@@ -1,6 +1,5 @@
 package net.okocraft.dailyrewards;
 
-import com.github.siroshun09.configapi.api.util.ResourceUtils;
 import com.github.siroshun09.mccommand.bukkit.BukkitCommandFactory;
 import net.okocraft.dailyrewards.command.RewardCommand;
 import net.okocraft.dailyrewards.config.GeneralConfig;
@@ -15,6 +14,10 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Level;
@@ -39,11 +42,13 @@ public class DailyRewards extends JavaPlugin {
         rewardConfig = new RewardConfig(this);
         receiveData = new ReceiveData(this);
 
-        try {
+        try (InputStream in = this.getClass().getClassLoader().getResourceAsStream(LanguageManager.JA_JP_FILENAME)) {
+            Objects.requireNonNull(in);
+
             // save japanese message file before loading languages
-            var jpFilename = "ja_JP.properties";
-            var jpFilepath = getDataFolder().toPath().resolve("lang").resolve(jpFilename);
-            ResourceUtils.copyFromJarIfNotExists(getFile().toPath(), jpFilename, jpFilepath);
+            Path jpFilepath = getDataFolder().toPath().resolve("lang").resolve(LanguageManager.JA_JP_FILENAME);
+            Files.copy(in, jpFilepath);
+
             languageManager.reload();
         } catch (IOException e) {
             throw new IllegalStateException(e);
