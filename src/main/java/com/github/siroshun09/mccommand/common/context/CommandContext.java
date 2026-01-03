@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mccommand.common.context;
 
-import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -28,13 +27,6 @@ import java.util.List;
  * An interface that represents context of the executed command.
  */
 public interface CommandContext {
-
-    /**
-     * Gets the executed command.
-     *
-     * @return the executed command
-     */
-    @NotNull Command getCommand();
 
     /**
      * Gets the commander.
@@ -49,13 +41,4 @@ public interface CommandContext {
      * @return the given arguments
      */
     @NotNull @Unmodifiable List<Argument> getArguments();
-
-    /**
-     * Gets the string used to specify the command.
-     * <p>
-     * It may always return the same string as {@link Command#getName()}.
-     *
-     * @return the string used to specify the command
-     */
-    @NotNull String getLabel();
 }

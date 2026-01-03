@@ -16,7 +16,6 @@
 
 package com.github.siroshun09.mccommand.common.context;
 
-import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -30,25 +29,18 @@ import java.util.Objects;
  */
 public class SimpleCommandContext implements CommandContext {
 
-    private final Command command;
     private final CommandSender sender;
     private final List<Argument> arguments;
-    private final String label;
 
     /**
      * Creates a {@link SimpleCommandContext}
      *
-     * @param command   the executed command
      * @param sender    the commander
      * @param arguments the given arguments
-     * @param label     the string used to specify the command
      */
-    public SimpleCommandContext(@NotNull Command command, @NotNull CommandSender sender,
-                                @NotNull List<Argument> arguments, @NotNull String label) {
-        this.command = command;
+    public SimpleCommandContext(@NotNull CommandSender sender, @NotNull List<Argument> arguments) {
         this.sender = sender;
         this.arguments = List.copyOf(arguments);
-        this.label = label;
     }
 
     /**
@@ -59,15 +51,6 @@ public class SimpleCommandContext implements CommandContext {
     @NotNull
     public static SimpleCommandContextBuilder newBuilder() {
         return new SimpleCommandContextBuilder();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @NotNull
-    @Override
-    public Command getCommand() {
-        return command;
     }
 
     /**
@@ -88,15 +71,6 @@ public class SimpleCommandContext implements CommandContext {
         return arguments;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @NotNull
-    @Override
-    public String getLabel() {
-        return label;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -109,48 +83,31 @@ public class SimpleCommandContext implements CommandContext {
 
         CommandContext that = (CommandContext) o;
 
-        return getCommand().equals(that.getCommand()) &&
-                getSender().equals(that.getSender()) &&
-                getArguments().equals(that.getArguments()) &&
-                getLabel().equals(that.getLabel());
+        return getSender().equals(that.getSender()) &&
+               getArguments().equals(that.getArguments());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCommand(), getSender(), getArguments(), getLabel());
+        return Objects.hash(getSender(), getArguments());
     }
 
     @Override
     public String toString() {
         return "SimpleCommandContext{" +
-                "command=" + command +
-                ", sender=" + sender +
-                ", arguments=" + arguments +
-                ", label='" + label + '\'' +
-                '}';
+               "sender=" + sender +
+               ", arguments=" + arguments +
+               '}';
     }
 
     /**
      * Builder class of {@link CommandContext}.
      */
     public static class SimpleCommandContextBuilder {
-        private Command command;
         private CommandSender sender;
         private List<Argument> arguments;
-        private String label;
 
         private SimpleCommandContextBuilder() {
-        }
-
-        /**
-         * Sets the executed command.
-         *
-         * @param command the executed command
-         * @return the builder instance
-         */
-        public SimpleCommandContextBuilder setCommand(Command command) {
-            this.command = command;
-            return this;
         }
 
         /**
@@ -195,18 +152,6 @@ public class SimpleCommandContext implements CommandContext {
         }
 
         /**
-         * Sets the string used to specify the command.
-         *
-         * @param label the string used to specify the command
-         * @return the builder instance
-         */
-        public SimpleCommandContextBuilder setLabel(String label) {
-            this.label = label;
-
-            return this;
-        }
-
-        /**
          * Builds the {@link CommandContext}
          *
          * @return the {@link CommandContext}
@@ -214,12 +159,10 @@ public class SimpleCommandContext implements CommandContext {
          */
         @NotNull
         public CommandContext build() {
-            Objects.requireNonNull(command);
             Objects.requireNonNull(sender);
             Objects.requireNonNull(arguments);
-            Objects.requireNonNull(label);
 
-            return new SimpleCommandContext(command, sender, arguments, label);
+            return new SimpleCommandContext(sender, arguments);
         }
     }
 }

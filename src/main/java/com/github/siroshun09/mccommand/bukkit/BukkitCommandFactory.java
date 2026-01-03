@@ -90,7 +90,7 @@ public final class BukkitCommandFactory {
                                  @NotNull String label, @NotNull String[] args) {
             executor.execute(() ->
                     command.onExecution(
-                            createContext(sender, label, args)
+                            createContext(sender, args)
                     ));
 
             return true;
@@ -100,16 +100,14 @@ public final class BukkitCommandFactory {
         public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, org.bukkit.command.@NotNull Command cmd,
                                                     @NotNull String label, @NotNull String[] args) {
             return command.onTabCompletion(
-                    createContext(sender, label, args)
+                    createContext(sender, args)
             );
         }
 
-        private CommandContext createContext(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        private CommandContext createContext(@NotNull CommandSender sender, @NotNull String[] args) {
             return SimpleCommandContext.newBuilder()
-                    .setCommand(command)
                     .setSender(sender)
                     .setArguments(args)
-                    .setLabel(label)
                     .build();
         }
     }
