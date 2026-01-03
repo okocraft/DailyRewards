@@ -2,8 +2,6 @@ package net.okocraft.dailyrewards.lang;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Locale;
-
 public enum DefaultMessage {
 
     PREFIX("prefix", "&8[&6DailyRewards&8]&7 "),
@@ -67,9 +65,5 @@ public enum DefaultMessage {
 
     public @NotNull String getMessage() {
         return def;
-    }
-
-    public static Locale getDefaultLocale() {
-        return Locale.US;
     }
 }

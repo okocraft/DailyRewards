@@ -66,8 +66,8 @@ public class LanguageManager {
     }
 
     private void loadDefaultLanguage() throws IOException {
-        Locale locale = DefaultMessage.getDefaultLocale();
-        Path defFile = directory.resolve(locale.toString() + FILE_EXTENSION);
+        Locale locale = Locale.US;
+        Path defFile = directory.resolve(locale + FILE_EXTENSION);
 
         Translation translation;
         if (Files.exists(defFile)) {
@@ -97,7 +97,7 @@ public class LanguageManager {
             files.filter(Files::isRegularFile)
                     .filter(Files::isReadable)
                     .filter(p -> p.getFileName().toString().endsWith(FILE_EXTENSION))
-                    .filter(p -> !p.getFileName().toString().equals(DefaultMessage.getDefaultLocale().toString() + FILE_EXTENSION))
+                    .filter(p -> !p.getFileName().toString().equals(Locale.US + FILE_EXTENSION))
                     .map(this::getLoadedLanguageFileUnsafe)
                     .filter(Objects::nonNull)
                     .map(PropertiesFileLoader::toTranslation)
