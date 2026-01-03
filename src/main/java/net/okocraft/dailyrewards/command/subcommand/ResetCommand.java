@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
@@ -31,19 +30,19 @@ public class ResetCommand extends AbstractCommand {
 
 
     @Override
-    public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
+    public void onExecution(@NotNull CommandContext context) {
         CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
-            return CommandResult.NO_PERMISSION;
+            return;
         }
 
         List<Argument> arguments = context.getArguments();
 
         if (arguments.size() < 2) {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.HELP_RESET, sender);
-            return CommandResult.NO_ARGUMENT;
+            return;
         }
 
         Argument secondArgument = arguments.get(1);
@@ -52,10 +51,10 @@ public class ResetCommand extends AbstractCommand {
             if (plugin.getReceiveData().reset()) {
                 plugin.getReceiveData().saveAsync();
                 plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RESET_ALL, sender);
-                return CommandResult.SUCCESS;
+                return;
             } else {
                 plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RESET_NO_CHANGE, sender);
-                return CommandResult.STATE_ERROR;
+                return;
             }
         }
 
@@ -67,7 +66,7 @@ public class ResetCommand extends AbstractCommand {
                     .replace(Placeholders.PLAYER_NAME, secondArgument)
                     .send(sender);
 
-            return CommandResult.INVALID_ARGUMENTS;
+            return;
         }
 
         if (false && !target.hasPlayedBefore()) {
@@ -76,7 +75,7 @@ public class ResetCommand extends AbstractCommand {
                     .replace(Placeholders.PLAYER_NAME, secondArgument)
                     .send(sender);
 
-            return CommandResult.STATE_ERROR;
+            return;
         }
 
         boolean changed = plugin.getReceiveData().setReceived(target.getUniqueId(), false);
@@ -90,10 +89,8 @@ public class ResetCommand extends AbstractCommand {
                     .replace(Placeholders.UUID, target.getUniqueId())
                     .send(sender);
 
-            return CommandResult.SUCCESS;
         } else {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RESET_NO_CHANGE, sender);
-            return CommandResult.STATE_ERROR;
         }
     }
 

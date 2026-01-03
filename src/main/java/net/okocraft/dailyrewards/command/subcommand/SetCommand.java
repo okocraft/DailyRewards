@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
@@ -34,19 +33,19 @@ public class SetCommand extends AbstractCommand {
     }
 
     @Override
-    public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
+    public void onExecution(@NotNull CommandContext context) {
         CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
-            return CommandResult.NO_PERMISSION;
+            return;
         }
 
         List<Argument> arguments = context.getArguments();
 
         if (arguments.size() < 3) {
             plugin.getMessageBuilder().sendMessage(DefaultMessage.HELP_SET, sender);
-            return CommandResult.NO_ARGUMENT;
+            return;
         }
 
         Argument secondArgument = arguments.get(1);
@@ -58,7 +57,7 @@ public class SetCommand extends AbstractCommand {
                     .replace(Placeholders.PLAYER_NAME, secondArgument)
                     .send(sender);
 
-            return CommandResult.INVALID_ARGUMENTS;
+            return;
         }
 
         if (false && !target.hasPlayedBefore()) {
@@ -67,7 +66,7 @@ public class SetCommand extends AbstractCommand {
                     .replace(Placeholders.PLAYER_NAME, secondArgument)
                     .send(sender);
 
-            return CommandResult.STATE_ERROR;
+            return;
         }
 
         Argument thirdArgument = arguments.get(2);
@@ -79,7 +78,7 @@ public class SetCommand extends AbstractCommand {
 
         if (bool == null) {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_SET_INVALID_BOOLEAN, sender);
-            return CommandResult.INVALID_ARGUMENTS;
+            return;
         }
 
         boolean changed = plugin.getReceiveData().setReceived(target.getUniqueId(), bool);
@@ -95,10 +94,8 @@ public class SetCommand extends AbstractCommand {
                     .replace(Placeholders.UUID, target.getUniqueId())
                     .send(sender);
 
-            return CommandResult.SUCCESS;
         } else {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_SET_NO_CHANGE, sender);
-            return CommandResult.STATE_ERROR;
         }
     }
 

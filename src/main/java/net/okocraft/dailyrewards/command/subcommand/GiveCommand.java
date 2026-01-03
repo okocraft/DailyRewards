@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
@@ -30,19 +29,19 @@ public class GiveCommand extends AbstractCommand {
     }
 
     @Override
-    public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
+    public void onExecution(@NotNull CommandContext context) {
         CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
-            return CommandResult.NO_PERMISSION;
+            return;
         }
 
         List<Argument> arguments = context.getArguments();
 
         if (arguments.size() < 3) {
             plugin.getMessageBuilder().sendMessage(DefaultMessage.HELP_GIVE, sender);
-            return CommandResult.NO_ARGUMENT;
+            return;
         }
 
         Argument secondArgument = arguments.get(1);
@@ -53,7 +52,7 @@ public class GiveCommand extends AbstractCommand {
                     .getMessageWithPrefix(DefaultMessage.COMMAND_GIVE_PLAYER_NOT_FOUND, sender)
                     .replace(Placeholders.PLAYER_NAME, secondArgument)
                     .send(sender);
-            return CommandResult.STATE_ERROR;
+            return;
         }
 
         Argument thirdArgument = arguments.get(2);
@@ -69,7 +68,7 @@ public class GiveCommand extends AbstractCommand {
                     .getMessageWithPrefix(DefaultMessage.COMMAND_GIVE_REWARD_NOT_FOUND, sender)
                     .replace(Placeholders.REWARD_NAME, thirdArgument)
                     .send(sender);
-            return CommandResult.STATE_ERROR;
+            return;
         }
 
         plugin.getServer().getScheduler()
@@ -84,7 +83,6 @@ public class GiveCommand extends AbstractCommand {
                 .replace(Placeholders.REWARD, reward)
                 .send(sender);
 
-        return CommandResult.SUCCESS;
     }
 
     @Override

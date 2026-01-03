@@ -60,11 +60,8 @@ public interface Command {
      * The method to call when this command is executed.
      *
      * @param context the context of the executed command
-     * @return the execution result
      */
-    @SuppressWarnings("UnusedReturnValue")
-    @NotNull
-    CommandResult onExecution(@NotNull CommandContext context);
+    void onExecution(@NotNull CommandContext context);
 
     /**
      * The method to call when command tab completion is requested.

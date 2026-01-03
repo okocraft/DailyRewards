@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
@@ -25,12 +24,12 @@ public class ReloadCommand extends AbstractCommand {
 
 
     @Override
-    public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
+    public void onExecution(@NotNull CommandContext context) {
         CommandSender sender = context.getSender();
 
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
-            return CommandResult.NO_PERMISSION;
+            return;
         }
 
         plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_START, sender);
@@ -50,7 +49,7 @@ public class ReloadCommand extends AbstractCommand {
 
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_CANCELLED, sender);
 
-            return CommandResult.EXCEPTION_OCCURRED;
+            return;
         }
 
         try {
@@ -68,7 +67,7 @@ public class ReloadCommand extends AbstractCommand {
 
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_CANCELLED, sender);
 
-            return CommandResult.EXCEPTION_OCCURRED;
+            return;
         }
 
         plugin.getReceiveData().reload();
@@ -85,12 +84,11 @@ public class ReloadCommand extends AbstractCommand {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_LANG_FAILURE, sender);
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_CANCELLED, sender);
 
-            return CommandResult.EXCEPTION_OCCURRED;
+            return;
         }
 
         plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.COMMAND_RELOAD_FINISH, sender);
 
-        return CommandResult.SUCCESS;
     }
 
     @Override
