@@ -72,15 +72,6 @@ public class ResetCommand extends AbstractCommand {
             return;
         }
 
-        if (false && !target.hasPlayedBefore()) {
-            plugin.getMessageBuilder()
-                    .getMessageWithPrefix(DefaultMessage.COMMAND_RESET_TARGET_NOT_JOINED, sender)
-                    .replace(Placeholders.PLAYER_NAME, secondArgument)
-                    .send(sender);
-
-            return;
-        }
-
         boolean changed = plugin.getReceiveData().setReceived(target.getUniqueId(), false);
 
         this.plugin.getServer().getAsyncScheduler().runNow(

@@ -60,15 +60,6 @@ public class SetCommand extends AbstractCommand {
             return;
         }
 
-        if (false && !target.hasPlayedBefore()) {
-            plugin.getMessageBuilder()
-                    .getMessageWithPrefix(DefaultMessage.COMMAND_SET_TARGET_NOT_JOINED, sender)
-                    .replace(Placeholders.PLAYER_NAME, secondArgument)
-                    .send(sender);
-
-            return;
-        }
-
         Argument thirdArgument = arguments.get(2);
         Boolean bool = switch (thirdArgument.get().toLowerCase(Locale.ROOT)) {
            case "true" -> true;
