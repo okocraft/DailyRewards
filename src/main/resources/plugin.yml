@@ -3,10 +3,6 @@ api-version: "1.13"
 main: net.okocraft.dailyrewards.DailyRewards
 version: ${project.version}
 author: Siroshun09
-commands:
-  dailyrewards:
-    default: true
-    aliases: [dailyreward, reward, rw, dr]
 permissions:
   dailyrewards.reward.default:
     default: true

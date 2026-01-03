@@ -1,6 +1,6 @@
 package net.okocraft.dailyrewards;
 
-import com.github.siroshun09.mccommand.bukkit.BukkitCommandFactory;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.okocraft.dailyrewards.command.RewardCommand;
 import net.okocraft.dailyrewards.config.GeneralConfig;
 import net.okocraft.dailyrewards.config.RewardConfig;
@@ -9,7 +9,6 @@ import net.okocraft.dailyrewards.lang.LanguageManager;
 import net.okocraft.dailyrewards.lang.MessageBuilder;
 import net.okocraft.dailyrewards.listener.PlayerJoinListener;
 import net.okocraft.dailyrewards.processor.Processors;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -60,16 +60,10 @@ public class DailyRewards extends JavaPlugin {
         scheduler = Executors.newSingleThreadScheduledExecutor();
         processors = new Processors(this);
 
-        PluginCommand command = getCommand("reward");
-
-        if (command != null) {
-            RewardCommand rewardCommand = new RewardCommand(this);
-            BukkitCommandFactory.registerAsync(command, rewardCommand);
-        } else {
-            getLogger().severe("Could not get /reward command, please report this to https://github.com/okocraft/DailyRewards/issues.");
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        this.getLifecycleManager().registerEventHandler(
+                LifecycleEvents.COMMANDS,
+                event -> event.registrar().register("dailyrewards", List.of("dr"), new RewardCommand(this))
+        );
 
         if (generalConfig.isAutoReceiveEnabled()) {
             playerJoinListener = new PlayerJoinListener(this);

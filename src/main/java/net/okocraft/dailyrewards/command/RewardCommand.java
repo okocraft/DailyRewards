@@ -1,11 +1,12 @@
 package net.okocraft.dailyrewards.command;
 
-import com.github.siroshun09.mccommand.common.AbstractCommand;
 import com.github.siroshun09.mccommand.common.Command;
-import com.github.siroshun09.mccommand.common.CommandResult;
 import com.github.siroshun09.mccommand.common.SubCommandHolder;
 import com.github.siroshun09.mccommand.common.argument.Argument;
 import com.github.siroshun09.mccommand.common.context.CommandContext;
+import com.github.siroshun09.mccommand.common.context.SimpleCommandContext;
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.audience.Audience;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.command.subcommand.GiveCommand;
@@ -20,13 +21,13 @@ import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-public class RewardCommand extends AbstractCommand {
+public class RewardCommand implements BasicCommand {
 
     private static final List<DefaultMessage> HELPS =
             List.of(
@@ -38,7 +39,6 @@ public class RewardCommand extends AbstractCommand {
     private final SubCommandHolder subCommandHolder;
 
     public RewardCommand(@NotNull DailyRewards plugin) {
-        super("dailyrewards", "dailyrewards.command", Set.of("rewards", "reward", "rw", "dr"));
         this.plugin = plugin;
         this.subCommandHolder =
                 SubCommandHolder.of(
@@ -50,25 +50,27 @@ public class RewardCommand extends AbstractCommand {
                 );
     }
 
-    @Override
-    public @NotNull CommandResult onExecution(@NotNull CommandContext context) {
+    public void onExecution(@NotNull CommandContext context) {
         CommandSender sender = context.getSender();
 
-        if (!sender.hasPermission(getPermission())) {
-            plugin.getMessageBuilder().sendNoPermission(sender, this);
-            return CommandResult.NO_PERMISSION;
+        if (!sender.hasPermission(this.permission())) {
+            plugin.getMessageBuilder()
+                    .getMessageWithPrefix(DefaultMessage.ERROR_NO_PERMISSION, sender)
+                    .replace(Placeholders.COMMAND_PERM, this.permission())
+                    .send(sender);
+            return;
         }
 
         if (context.getArguments().isEmpty()) {
             sendUsage(sender);
-            return CommandResult.NO_ARGUMENT;
+            return;
         }
 
         Argument firstArgument = context.getArguments().get(0);
         Optional<Command> subCommand = subCommandHolder.searchOptional(firstArgument);
 
         if (subCommand.isPresent()) {
-            return subCommand.get().onExecution(context);
+            subCommand.get().onExecution(context);
         } else {
             if (!firstArgument.get().equalsIgnoreCase("help")) {
                 plugin.getMessageBuilder()
@@ -77,16 +79,14 @@ public class RewardCommand extends AbstractCommand {
                         .send(sender);
             }
             sendUsage(sender);
-            return CommandResult.INVALID_ARGUMENTS;
         }
     }
 
-    @Override
     public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
         CommandSender sender = context.getSender();
         List<Argument> args = context.getArguments();
 
-        if (args.isEmpty() || !sender.hasPermission(getPermission())) {
+        if (args.isEmpty() || !sender.hasPermission(this.permission())) {
             return Collections.emptyList();
         }
 
@@ -117,5 +117,27 @@ public class RewardCommand extends AbstractCommand {
 
         plugin.getMessageBuilder().sendMessage(DefaultMessage.HELP_EMPTY, receiver);
         HELPS.forEach(help -> plugin.getMessageBuilder().sendMessage(help, receiver));
+    }
+
+    @Override
+    public void execute(@NotNull CommandSourceStack source, String @NotNull [] args) {
+        this.onExecution(createContext(source.getSender(), args));
+    }
+
+    @Override
+    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack source, String @NotNull [] args) {
+        return this.onTabCompletion(createContext(source.getSender(), args));
+    }
+
+    @Override
+    public @NotNull String permission() {
+        return "dailyrewards.command";
+    }
+
+    private static CommandContext createContext(@NotNull CommandSender sender, @NotNull String[] args) {
+        return SimpleCommandContext.newBuilder()
+                .setSender(sender)
+                .setArguments(args)
+                .build();
     }
 }
