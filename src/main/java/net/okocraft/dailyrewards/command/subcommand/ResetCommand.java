@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import net.okocraft.dailyrewards.lang.Placeholders;
@@ -29,22 +28,18 @@ public class ResetCommand extends AbstractCommand {
 
 
     @Override
-    public void onExecution(@NotNull CommandContext context) {
-        CommandSender sender = context.getSender();
-
+    public void onExecution(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
             return;
         }
 
-        List<String> arguments = context.getArguments();
-
-        if (arguments.size() < 2) {
+        if (args.size() < 2) {
             plugin.getMessageBuilder().sendMessageWithPrefix(DefaultMessage.HELP_RESET, sender);
             return;
         }
 
-        String secondArgument = arguments.get(1);
+        String secondArgument = args.get(1);
 
         if (secondArgument.equalsIgnoreCase("all")) {
             if (plugin.getReceiveData().reset()) {
@@ -91,15 +86,12 @@ public class ResetCommand extends AbstractCommand {
     }
 
     @Override
-    public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
-        List<String> arguments = context.getArguments();
-        CommandSender sender = context.getSender();
-
+    public @NotNull List<String> onTabCompletion(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(getPermission())) {
             return Collections.emptyList();
         }
 
-        if (arguments.size() == 2) {
+        if (args.size() == 2) {
             List<String> result = new ArrayList<>();
 
             result.add("all");
@@ -112,7 +104,7 @@ public class ResetCommand extends AbstractCommand {
                     .collect(Collectors.toCollection(() -> result));
 
             return StringUtil.copyPartialMatches(
-                    arguments.get(1),
+                    args.get(1),
                     result,
                     new ArrayList<>()
             );

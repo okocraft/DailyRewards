@@ -1,7 +1,6 @@
 package net.okocraft.dailyrewards.command.subcommand;
 
 import com.github.siroshun09.mccommand.common.AbstractCommand;
-import com.github.siroshun09.mccommand.common.context.CommandContext;
 import net.okocraft.dailyrewards.DailyRewards;
 import net.okocraft.dailyrewards.lang.DefaultMessage;
 import net.okocraft.dailyrewards.lang.Placeholders;
@@ -32,22 +31,18 @@ public class SetCommand extends AbstractCommand {
     }
 
     @Override
-    public void onExecution(@NotNull CommandContext context) {
-        CommandSender sender = context.getSender();
-
+    public void onExecution(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(getPermission())) {
             plugin.getMessageBuilder().sendNoPermission(sender, this);
             return;
         }
 
-        List<String> arguments = context.getArguments();
-
-        if (arguments.size() < 3) {
+        if (args.size() < 3) {
             plugin.getMessageBuilder().sendMessage(DefaultMessage.HELP_SET, sender);
             return;
         }
 
-        String secondArgument = arguments.get(1);
+        String secondArgument = args.get(1);
         OfflinePlayer target = this.plugin.getServer().getOfflinePlayerIfCached(secondArgument);
 
         if (target == null) {
@@ -59,7 +54,7 @@ public class SetCommand extends AbstractCommand {
             return;
         }
 
-        Boolean bool = switch (arguments.get(2).toLowerCase(Locale.ROOT)) {
+        Boolean bool = switch (args.get(2).toLowerCase(Locale.ROOT)) {
            case "true" -> true;
            case "false" -> false;
            default -> null;
@@ -92,15 +87,12 @@ public class SetCommand extends AbstractCommand {
     }
 
     @Override
-    public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
-        List<String> arguments = context.getArguments();
-        CommandSender sender = context.getSender();
-
+    public @NotNull List<String> onTabCompletion(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(getPermission())) {
             return Collections.emptyList();
         }
 
-        if (arguments.size() == 2) {
+        if (args.size() == 2) {
             List<String> result = new ArrayList<>();
 
             plugin.getServer().getOnlinePlayers()
@@ -117,15 +109,15 @@ public class SetCommand extends AbstractCommand {
                     .collect(Collectors.toCollection(() -> result));
 
             return StringUtil.copyPartialMatches(
-                    arguments.get(1),
+                    args.get(1),
                     result,
                     new ArrayList<>()
             );
         }
 
-        if (arguments.size() == 3) {
+        if (args.size() == 3) {
             return StringUtil.copyPartialMatches(
-                    arguments.get(2),
+                    args.get(2),
                     TRUE_OR_FALSE,
                     new ArrayList<>()
             );

@@ -2,8 +2,6 @@ package net.okocraft.dailyrewards.command;
 
 import com.github.siroshun09.mccommand.common.Command;
 import com.github.siroshun09.mccommand.common.SubCommandHolder;
-import com.github.siroshun09.mccommand.common.context.CommandContext;
-import com.github.siroshun09.mccommand.common.context.SimpleCommandContext;
 import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.audience.Audience;
@@ -49,9 +47,7 @@ public class RewardCommand implements BasicCommand {
                 );
     }
 
-    public void onExecution(@NotNull CommandContext context) {
-        CommandSender sender = context.getSender();
-
+    public void onExecution(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (!sender.hasPermission(this.permission())) {
             plugin.getMessageBuilder()
                     .getMessageWithPrefix(DefaultMessage.ERROR_NO_PERMISSION, sender)
@@ -60,16 +56,16 @@ public class RewardCommand implements BasicCommand {
             return;
         }
 
-        if (context.getArguments().isEmpty()) {
+        if (args.isEmpty()) {
             sendUsage(sender);
             return;
         }
 
-        String firstArgument = context.getArguments().getFirst();
+        String firstArgument = args.getFirst();
         Optional<Command> subCommand = subCommandHolder.searchOptional(firstArgument);
 
         if (subCommand.isPresent()) {
-            subCommand.get().onExecution(context);
+            subCommand.get().onExecution(sender, args);
         } else {
             if (!firstArgument.equalsIgnoreCase("help")) {
                 plugin.getMessageBuilder()
@@ -81,15 +77,12 @@ public class RewardCommand implements BasicCommand {
         }
     }
 
-    public @NotNull List<String> onTabCompletion(@NotNull CommandContext context) {
-        CommandSender sender = context.getSender();
-        List<String> args = context.getArguments();
-
+    public @NotNull List<String> onTabCompletion(@NotNull CommandSender sender, @NotNull List<String> args) {
         if (args.isEmpty() || !sender.hasPermission(this.permission())) {
             return Collections.emptyList();
         }
 
-        String firstArgument = context.getArguments().getFirst();
+        String firstArgument = args.getFirst();
 
         if (args.size() == 1) {
             return StringUtil.copyPartialMatches(
@@ -103,7 +96,7 @@ public class RewardCommand implements BasicCommand {
         } else {
             return subCommandHolder
                     .searchOptional(firstArgument)
-                    .map(cmd -> cmd.onTabCompletion(context))
+                    .map(cmd -> cmd.onTabCompletion(sender, args))
                     .orElse(Collections.emptyList());
         }
     }
@@ -120,23 +113,16 @@ public class RewardCommand implements BasicCommand {
 
     @Override
     public void execute(@NotNull CommandSourceStack source, String @NotNull [] args) {
-        this.onExecution(createContext(source.getSender(), args));
+        this.onExecution(source.getSender(), List.of(args));
     }
 
     @Override
     public @NotNull Collection<String> suggest(@NotNull CommandSourceStack source, String @NotNull [] args) {
-        return this.onTabCompletion(createContext(source.getSender(), args));
+        return this.onTabCompletion(source.getSender(), List.of(args));
     }
 
     @Override
     public @NotNull String permission() {
         return "dailyrewards.command";
-    }
-
-    private static CommandContext createContext(@NotNull CommandSender sender, @NotNull String[] args) {
-        return SimpleCommandContext.newBuilder()
-                .setSender(sender)
-                .setArguments(args)
-                .build();
     }
 }

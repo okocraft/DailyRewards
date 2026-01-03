@@ -16,7 +16,7 @@
 
 package com.github.siroshun09.mccommand.common;
 
-import com.github.siroshun09.mccommand.common.context.CommandContext;
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -59,16 +59,18 @@ public interface Command {
     /**
      * The method to call when this command is executed.
      *
-     * @param context the context of the executed command
+     * @param sender    the sender of the executed command
+     * @param arguments the arguments of the executed command
      */
-    void onExecution(@NotNull CommandContext context);
+    void onExecution(@NotNull CommandSender sender, @NotNull List<String> arguments);
 
     /**
      * The method to call when command tab completion is requested.
      *
-     * @param context the context of the command line when tab completion is requested
+     * @param sender    the sender of the command line when tab completion is requested
+     * @param arguments the arguments of the command line when tab completion is requested
      * @return the tab completion result
      */
     @NotNull
-    List<String> onTabCompletion(@NotNull CommandContext context);
+    List<String> onTabCompletion(@NotNull CommandSender sender, @NotNull List<String> arguments);
 }
